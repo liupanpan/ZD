@@ -74,8 +74,91 @@ bool ZD_Try_Lock_Mutex(ZD_Mutex_T* mutex);
  */
 bool ZD_Unlock_Mutex(ZD_Mutex_T* mutex);
 
+/**
+ *  Creates a semaphore.
+ *
+ *  @param [out] sem   pointer to the semaphore to be created
+ *  @param [in]  attr  semaphore attributes.
+ *
+ *  @note Semafore initial value is defined in structure pointed by 
+ *        attr pointer. If the pointer is equal NULL then initial values 
+ *        is set to 0.
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see ZD_Destroy_Semaphore(), ZD_Wait_Semaphore(), 
+ *       ZD_Signal_Semaphore()
+ */
+bool ZD_Create_Semaphore(ZD_Semaphore_T* sem, const ZD_Semaphore_Attr_T* attr);
 
+/**
+ *  Destroys a semaphore.
+ *
+ *  @param [in] sem  pointer to the semaphore to be destroyed
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see ZD_Create_Semaphore()
+ */
+bool ZD_Destroy_Semaphore(ZD_Semaphore_T* sem);
 
+/**
+ *  Attempts to wait for a semaphore.
+ *
+ *  Suspends the calling thread until the semaphore pointed to by 
+ *  sem has non-zero count.
+ *
+ *  @param [in] sem  pointer to the semaphore to wait for
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see ZD_Create_Semaphore(), ZD_Try_Wait_Semaphore(),
+ *       ZD_Wait_Semaphore_Timeout(), ZD_Signal_Semaphore()
+ */
+bool ZD_Wait_Semaphore(ZD_Semaphore_T* sem);
+
+/**
+ *  Attempts to wait for a semaphore with a timeout.
+ *
+ *  If semaphore count is 0, the calling thread blocks until 
+ *  the semaphore is signaled or specified timeout expires.
+ *
+ *  @param [in] sem           pointer to the semaphore to wait for
+ *  @param [in] timeout_msec  timeout value (milliseconds)
+ *
+ *  @return  true on success, false on timeout or error
+ * 
+ *  @see ZD_Create_Semaphore(), ZD_Wait_Semaphore(), 
+ *       ZD_Try_Wait_Semaphore(), ZD_Signal_Semaphore()
+ */
+bool ZD_Wait_Semaphore_Timeout(ZD_Semaphore_T* sem, int32_t timeout_msec);
+
+/**
+ *  Attempts to wait for a semaphore.
+ *
+ *  Function does not block the calling thread if semaphore
+ *  value is equal to zero.
+ *
+ *  @param [in] sem  pointer to the semaphore to wait for
+ *
+ *  @return  true on success, false when semaphore value is zero
+ *           or an error occurs
+ * 
+ *  @see ZD_Create_Semaphore(), ZD_Wait_Semaphore(),
+ *       ZD_Wait_Semaphore_Timeout(), ZD_Signal_Semaphore()
+ */
+bool ZD_Try_Wait_Semaphore(ZD_Semaphore_T* sem);
+
+/**
+ *  Signals a semaphore.
+ *
+ *  @param [in] sem  pointer to the semaphore to be signaled
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see ZD_Create_Semaphore(), ZD_Wait_Semaphore(), 
+ */
+bool ZD_Signal_Semaphore(ZD_Semaphore_T* sem);
 
 
 
