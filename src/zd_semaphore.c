@@ -5,6 +5,12 @@
 #include "zd_assert.h"
 #include "zd_time.h"
 
+void ZD_Init_Semaphore_Attr(ZD_Semaphore_Attr_T* attr)
+{
+   	ZD_CON(attr != NULL);
+   	attr->initial_value = 0;
+}
+
 bool ZD_Create_Semaphore(ZD_Semaphore_T* sem, const ZD_Semaphore_Attr_T* attr)
 {
 	int32_t status;

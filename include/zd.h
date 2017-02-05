@@ -74,6 +74,21 @@ bool ZD_Try_Lock_Mutex(ZD_Mutex_T* mutex);
  */
 bool ZD_Unlock_Mutex(ZD_Mutex_T* mutex);
 
+/* -------------------------------------------------------------------------
+ *
+ *                              SAL Semaphore
+ *
+ * -------------------------------------------------------------------------*/
+
+/**
+ *  Initializes semaphore attributes.
+ *
+ *  @param [out]  attr  semaphore attributes
+ *
+ *  @see SAL_Create_Semaphore()
+ */
+void ZD_Init_Semaphore_Attr(ZD_Semaphore_Attr_T* attr);
+
 /**
  *  Creates a semaphore.
  *
