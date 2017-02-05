@@ -6,6 +6,7 @@ extern "C"
 {
 #endif
 
+#include <stdint.h>
 #include "zd_data_types_linux.h"
 
 /* -------------------------------------------------------------------------
@@ -85,7 +86,7 @@ bool ZD_Unlock_Mutex(ZD_Mutex_T* mutex);
  *
  *  @param [out]  attr  semaphore attributes
  *
- *  @see SAL_Create_Semaphore()
+ *  @see ZD_Create_Semaphore()
  */
 void ZD_Init_Semaphore_Attr(ZD_Semaphore_Attr_T* attr);
 
@@ -174,6 +175,97 @@ bool ZD_Try_Wait_Semaphore(ZD_Semaphore_T* sem);
  *  @see ZD_Create_Semaphore(), ZD_Wait_Semaphore(), 
  */
 bool ZD_Signal_Semaphore(ZD_Semaphore_T* sem);
+
+/* -------------------------------------------------------------------------
+ *
+ *                         SAL Conditional Variable
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Initializes conditional variable attributes.
+ *
+ *  @param [out] attr  conditional variable attributes to be initialized.
+ *
+ *  @note Currently ZD doesn't support any conditional variable attributes.
+ *
+ *  @see ZD_Create_Cond()
+ */
+void ZD_Init_Cond_Attr(ZD_Cond_Attr_T* attr);
+
+/**
+ *  Creates a conditional variable.
+ *
+ *  @param [out] cond   pointer to the created conditional variable.
+ *  @param [in]  attr   conditional variable attributes. If the attr pointer
+ *                      is NULL, then the default attributes are used.
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @note Currently ZD doesn't support any Conditional Variable attributes, 
+ *        so the attr param has to be set to NULL.
+ *
+ *  @see ZD_Destroy_Cond(), ZD_Wait_Cond(), ZD_Signal_Cond()
+ */
+bool ZD_Create_Cond(ZD_Cond_T* cond, const ZD_Cond_Attr_T* attr);
+
+/**
+ *  Destroys a conditional variable.
+ *
+ *  @param [in] cond  pointer to the conditional variable to be destroyed.
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see ZD_Create_Cond().
+ */
+bool ZD_Destroy_Cond(ZD_Cond_T* cond);
+
+/**
+ *  Wait for conditional variable.
+ *
+ *  @param [in] cond   pointer to the conditional variable to wait for
+ *  @param [in] mutex  pointer to the critical section mutex 
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @note Some Operating Systems do not allow recursive mutexes with 
+ *        condition variables.
+ * 
+ *  @see ZD_Create_Cond(), ZD_Wait_Cond_Timeout(), ZD_Signal_Cond()
+ */
+bool ZD_Wait_Cond(ZD_Cond_T* cond, ZD_Mutex_T* mutex);
+
+/**
+ *  Wait for conditional variable until it will be signalized
+ *  or the specified timeout expires.
+ *
+ *  @param [in] cond          pointer to the conditional variable to wait for
+ *  @param [in] mutex         pointer to the critical section mutex 
+ *  @param [in] timeout_msec  timeout value (milliseconds)
+ *
+ *  @return  true on success, false on timeout or error
+ *
+ *  @note Some Operating Systems do not allow recursive mutexes 
+ *        with condition variables.
+ *
+ *  @see ZD_Create_Cond(), ZD_Wait_Cond(), ZD_Signal_Cond()
+ */
+bool ZD_Wait_Cond_Timeout(ZD_Cond_T* cond, ZD_Mutex_T* mutex, uint32_t timeout_msec);
+
+/**
+ *  Signals a conditional variable.
+ *
+ *  @param [in] cond   pointer to the conditional variable to be signaled
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see ZD_Create_Cond(), ZD_Wait_Cond()
+ */
+bool ZD_Signal_Cond(ZD_Cond_T* cond);
+
+
+
+
+
 
 
 

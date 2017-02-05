@@ -28,6 +28,16 @@ typedef struct ZD_Semaphore_Attr_Tag
    int32_t initial_value;
 }ZD_Semaphore_Attr_T;
 
+/**
+ *  XSAL Conditional Variable
+ */
+typedef pthread_cond_t ZD_Cond_T;
+
+typedef void* ZD_Cond_Attr_T;
+
+
+
+
 
 #endif /* ZD_DATA_TYPES_LINUX_H */
 
