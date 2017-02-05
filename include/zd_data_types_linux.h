@@ -35,7 +35,12 @@ typedef pthread_cond_t ZD_Cond_T;
 
 typedef void* ZD_Cond_Attr_T;
 
+/**
+ *  XSAL Read_Write lock.
+ */
+typedef pthread_rwlock_t ZD_RWLock_T;
 
+typedef void* ZD_RWLock_Attr_T;
 
 
 

@@ -194,7 +194,7 @@ void ZD_Init_Cond_Attr(ZD_Cond_Attr_T* attr);
 
 /**
  *  Creates a conditional variable.
- *
+*
  *  @param [out] cond   pointer to the created conditional variable.
  *  @param [in]  attr   conditional variable attributes. If the attr pointer
  *                      is NULL, then the default attributes are used.
@@ -262,7 +262,155 @@ bool ZD_Wait_Cond_Timeout(ZD_Cond_T* cond, ZD_Mutex_T* mutex, uint32_t timeout_m
  */
 bool ZD_Signal_Cond(ZD_Cond_T* cond);
 
+/* -------------------------------------------------------------------------
+ *
+ *                          SAL Read-Write Lock
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Initializes Read-Write lock attributes.
+ *
+ *  @param [out] attr  Read-Write lock attributes to be initialized.
+ *
+ *  @note Currently ZD doesn't support any Read-Write attributes.
+ *
+ *  @see ZD_Create_RWLock()
+ */
+void ZD_Init_RWLock_Attr(ZD_RWLock_Attr_T* attr);
 
+/**
+ *  Creates a Read-Write lock.
+ *
+ *  @param [out] rw_lock  pointer to the created Read-Write lock.
+ *  @param [in]  attr     Read-Write lock attributes. If the attr pointer is
+ *                        NULL, then the default attributes are used.
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @note Currently ZD doesn't support any Read-Write attributes, 
+ *        so the attr param has to be set to NULL.
+ *
+ *  @see ZD_Destroy_RWLock(), ZD_RLock_RWLock(), ZD_WLock_RWLock(),
+ *       ZD_Unlock_RWLock().
+ */
+bool ZD_Create_RWLock(ZD_RWLock_T* rw_lock, const ZD_RWLock_Attr_T* attr);
+
+/**
+ *  Destroys a Read-Write lock.
+ *
+ *  @param [in] rw_lock  pointer to the Read-Write lock to be destroyed.
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see ZD_Create_RWLock().
+ */
+bool ZD_Destroy_RWLock(ZD_RWLock_T* rw_lock);
+
+/**
+ *  Locks a Read-Write lock on Read operation.
+ *
+ *  @param [in] rw_lock  pointer to the Read_Write lock.
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see ZD_Create_RWLock(), 
+ *       ZD_RLock_RWLock_Timeout(), ZD_Try_RLock_RWLock(),
+ *       ZD_Unlock_RWLock().
+ */
+bool ZD_RLock_RWLock(ZD_RWLock_T* rw_lock);
+
+/**
+ *  Attempts to lock a Read-Write lock on Read operation.
+ *
+ *  If the Read-Write lock is already exclusively locked by any thread,
+ *  the calling thread blocks until the Read-Write lock becomes available 
+ *  or specified timeout expires.
+ *
+ *  @param [in] rw_lock       pointer to the Read-Write lock to be locked
+ *  @param [in] timeout_msec  timeout value (milliseconds)
+ *
+ *  @return  true on success, false on timeout or error
+ *
+ *  @see ZD_Create_RWLock(),
+ *       ZD_RLock_RWLock(), ZD_Try_RLock_RWLock(),
+ *       ZD_Unlock_RWLock().
+ */
+bool ZD_RLock_RWLock_Timeout(ZD_RWLock_T* rw_lock, uint32_t timeout_msec);
+
+/**
+ *  Attempts to lock a Read-Write lock on Read operation.
+ *
+ *  If the Read-Write lock is already exclusively locked by any thread,
+ *  then it returns immediately.
+ *
+ *  @param [in] rw_lock  pointer to the Read-Write lock to be locked
+ *
+ *  @return  true on success, false when the rw_lock is already locked 
+ *           or an error occurs
+ *
+ *  @see ZD_Create_RWLock(),
+ *       ZD_RLock_RWLock(), ZD_RLock_RWLock_Timeout(),
+ *       ZD_Unlock_RWLock().
+ */
+bool ZD_Try_RLock_RWLock(ZD_RWLock_T* rw_lock);
+
+/**
+ *  Locks a Read-Write lock on Write operation.
+ *
+ *  @param [in] rw_lock  pointer to the Read-Write lock to be locked.
+ *
+ *  @return  true on success, false on failure.
+ *
+ *  @see ZD_Create_RWLock(),
+ *       ZD_WLock_RWLock_Timeout(), ZD_Try_WLock_RWLock(), 
+ *       ZD_Unlock_RWLock().
+ */
+bool ZD_WLock_RWLock(ZD_RWLock_T* rw_lock);
+
+/**
+ *  Attempts to lock a Read-Write on Write operation.
+ *
+ *  If the Read-Write lock is already exclusively locked by any thread,
+ *  the the calling thread blocks until the Read-Write lock becomes available 
+ *  or specified timeout expires.
+ *
+ *  @param [in] rw_lock         pointer to the Read-Write lock to be locked
+ *  @param [in] timeout_msec  timeout value (milliseconds)
+ *
+ *  @return  true on success, false on timeout or error
+ *
+ *  @see SAL_Create_RWLock(),
+ *       SAL_WLock_RWLock(), SAL_Try_WLock_RWLock(), 
+ *       SAL_Unlock_RWLock().
+ */
+bool ZD_WLock_RWLock_Timeout(ZD_RWLock_T* rw_lock, uint32_t timeout_msec);
+
+/**
+ *  Attempts to lock a Read-Write on Write operation.
+ *
+ *  If the Read-Write lock is already exclusively locked by any thread,
+ *  then it returns immediately.
+ *
+ *  @param [in] rw_lock  pointer to the Read-Write lock to be locked.
+ *
+ *  @return  true on success, false when the mutex is already locked 
+ *           or an error occurs
+ *
+ *  @see ZD_Create_Mutex(), ZD_Lock_Mutex(), 
+ *       ZD_Lock_Mutex_Timeout, ZD_Unlock_Mutex()
+ */
+bool ZD_Try_WLock_RWLock(ZD_RWLock_T* rw_lock);
+
+/**
+ *  Unlocks a Read-Write lock.
+ *
+ *  @param [in] rw_lock  pointer to the Read-Write lock to be unlocked
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see ZD_Create_RWLock(), ZD_RLock_RWLock(), ZD_WLock_RWLock()
+ */
+bool ZD_Unlock_RWLock(ZD_RWLock_T* rw_lock);
 
 
 
