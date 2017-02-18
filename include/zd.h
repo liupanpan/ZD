@@ -7,7 +7,7 @@ extern "C"
 #endif
 
 #include <stdint.h>
-#include "zd_data_types_linux.h"
+#include "zd_data_types.h"
 
 /* -------------------------------------------------------------------------
  *
@@ -412,6 +412,84 @@ bool ZD_Try_WLock_RWLock(ZD_RWLock_T* rw_lock);
  */
 bool ZD_Unlock_RWLock(ZD_RWLock_T* rw_lock);
 
+/* -------------------------------------------------------------------------
+ *
+ *                           Thread management
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Initializes thread attribute structure.
+ *
+ *  @param [out]  attr  thread attributes to be initialized
+ *
+ *  @see ZD_Create_Thread()
+ */
+void ZD_Init_Thread_Attr(ZD_Thread_Attr_T* attr);
+
+/**
+ *  Creates a thread with a given name, identifier, priority, thread
+ *  function to execute, and the argument to pass to the thread function.
+ *
+ *  Thread name, thread identifier and priority are defined in structure 
+ *  pointed by attr pointer.
+ *
+ *  If the attr pointer is set to NULL then default values are used:
+ *   o) thread identifier is set to ZD_UNKNOWN_THREAD_ID, 
+ *   o) thread name is set to numerical value of thread identifier,  
+ *   o) thread priority is set to the ZD_DEFAULT_THREAD_PRIORITY value
+ *      (defined during compilation)
+ *
+ *  If ZD_UNKNOWN_THREAD_ID is passed as thread ID, ZD will allocate
+ *  an ID for the thread (@see ZD_Init()).
+ *
+ *  @note It is not possible to create more than one thread with 
+ *        the same thread id. 
+ *
+ *  @note In order to synchronize thread startup and shutdown, functions
+ *        ZD_Signal_Ready(), ZD_Wait_Ready() and ZD_Wait_Destroyed() 
+ *        can be used.
+ *
+ *  @note Thread is not started until ZD_Run() is called.
+ *
+ *  @param [in] thread_function thread function
+ *  @param [in] param           parameter passed to thread function
+ *  @param [in] attr            thread attributes
+ *
+ *  @return  ID of the created thread or ZD_UNKNOWN_THREAD_ID in case of failure
+ *
+ *  @pre thread_id has to be in the range 1 to 
+ *       max_number_of_threads (as declared by ZD_Init()).
+ *
+ *  @see ZD_Init(), ZD_Run(), ZD_Destroy_Thread(),
+ *       ZD_Signal_Ready(), ZD_Wait_Ready(), ZD_Wait_Destroyed()
+ */
+int32_t ZD_Create_Thread(void (*thread_function)(void*), void* param, const ZD_Thread_Attr_T* attr);
+
+
+
+
+
+
+
+/* -------------------------------------------------------------------------
+ *
+ *              Thread synchronization at startup/termination
+ *
+ * -------------------------------------------------------------------------*/
+
+
+
+
+/**
+ *  Suspends its caller until all threads in thread_id_list
+ *  have called ZD_Signal_Ready().
+ *
+ *  @param [in] thread_id_list   list of IDs of threads to wait for
+ *  @param [in] number_of_items  number of thread IDs on the list
+ *
+ *  @see ZD_Signal_Ready(), ZD_Wait_Destroyed()
+ */
+void ZD_Wait_Ready(const int32_t thread_id_list[], size_t number_of_items);
 
 
 

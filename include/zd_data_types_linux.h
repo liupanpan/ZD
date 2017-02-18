@@ -42,6 +42,47 @@ typedef pthread_rwlock_t ZD_RWLock_T;
 
 typedef void* ZD_RWLock_Attr_T;
 
+/* -------------------------------------------------------------------------
+ *
+ *                           Thread management
+ *
+ * -----------------------------------------------------------------------*/
+/**
+ *  Thread attributes
+ */
+typedef struct ZD_Thread_Attr_Tag
+{
+   const char*     	name;
+   int32_t 			id;
+   int32_t  		priority;
+   size_t          	stack_size;
+} ZD_Thread_Attr_T;
+
+/** Default priority for Thread
+ */
+#if !defined(ZD_DEFAULT_THREAD_PRIORITY)
+#define ZD_DEFAULT_THREAD_PRIORITY  10
+#endif /* ZD_DEFAULT_THREAD_PRIORITY */
+
+/** Default thread stack size
+ */
+#if !defined(ZD_DEFAULT_THREAD_STACK_SIZE)
+/* Use OS default value */
+#define ZD_DEFAULT_THREAD_STACK_SIZE  0
+#endif /* ZD_DEFAULT_THREAD_STACK_SIZE */
+
+/**
+ *  Thread Local Storage key
+ */
+typedef pthread_key_t ZD_TLS_Key_T;
+
+/**
+ *  Thread handle
+ */
+typedef pthread_t ZD_OS_TID_T;
+
+#define ZD_UNKNOWN_PRIORITY (-1)
+
 
 
 #endif /* ZD_DATA_TYPES_LINUX_H */

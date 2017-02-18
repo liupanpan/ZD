@@ -18,6 +18,12 @@ extern "C"
       }                                	\
    } while(0)
 
+#define ZD_FAILED()                 \
+   do                                     \
+   {                                      \
+      abort();                            \
+   } while(0)
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
