@@ -146,6 +146,11 @@ static void Set_Priority_If_Other_Sched_Policy(pid_t tid, int32_t priority)
    }
 }
 
+void ZD_I_Free_Thread_Resources(int32_t thread_id)
+{
+
+}
+
 static void* ZD_I_Start_User_Thread(ZD_I_Thread_Attr_T* thread_attr)
 {
    static const int32_t wait_ready[] =
@@ -198,7 +203,7 @@ static void* ZD_I_Start_User_Thread(ZD_I_Thread_Attr_T* thread_attr)
     *  o) unsubscribe thread events
     *  o) message queue
     */
-   //ZD_I_Free_Thread_Resources(thread_attr->thread_id); /* TODO change to: thread_attr */
+   ZD_I_Free_Thread_Resources(thread_attr->thread_id); /* TODO change to: thread_attr */
 
    return NULL;
 }
