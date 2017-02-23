@@ -2,7 +2,7 @@
 #define ZD_THREAD_H
 
 #include "zd_data_types.h"
-
+#include "zd_queue.h"
 /** Maximum length of the thread name (including terminating string byte).
  */
 #define ZD_THREAD_NAME_MAX_LENGTH (8+1)
@@ -51,7 +51,7 @@ typedef struct SAL_I_Thread_Attr_Tag
 
    /** Thread's queue
     */
-   //SAL_Message_Queue_T message_queue;
+   ZD_Message_Queue_T message_queue;
 
    /** Current thread's message
     */
@@ -84,6 +84,13 @@ typedef struct SAL_I_Thread_Attr_Tag
  */
 bool ZD_I_TLS_Set_Specific(ZD_TLS_Key_T tls_key, const void* value);
 
+/** Function returns value of the key from the Thread Local Storage.
+ */
+void* ZD_I_TLS_Get_Specific(ZD_TLS_Key_T tls_key);
+
+/** Returns pointer to the calling thread attributes
+ */
+ZD_I_Thread_Attr_T*  ZD_I_Get_Thread_Attr(void);
 
 pid_t SAL_I_Get_Linux_Tid(void);
 

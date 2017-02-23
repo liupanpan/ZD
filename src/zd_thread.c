@@ -29,6 +29,18 @@ ZD_I_Thread_Attr_T* ZD_I_Thread_Table;
  */
 ZD_Mutex_T ZD_I_Thread_Table_Mutex;
 
+void* ZD_I_TLS_Get_Specific(ZD_TLS_Key_T tls_key)
+{
+   return pthread_getspecific(tls_key);
+}
+
+/** Returns pointer to calling thread data.
+ */
+ZD_I_Thread_Attr_T* ZD_I_Get_Thread_Attr(void)
+{
+   return (ZD_I_Thread_Attr_T*)ZD_I_TLS_Get_Specific(ZD_I_Thread_Id_Self);
+}
+
 void ZD_Init_Thread_Attr(ZD_Thread_Attr_T* attr)
 {
    ZD_CON(attr != NULL);

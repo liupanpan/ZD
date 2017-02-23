@@ -7,6 +7,7 @@ extern "C"
 #endif
 
 #include <stdint.h>
+#include "stdio.h"
 #include "zd_data_types.h"
 
 /* -------------------------------------------------------------------------
@@ -490,6 +491,57 @@ int32_t ZD_Create_Thread(void (*thread_function)(void*), void* param, const ZD_T
  *  @see ZD_Signal_Ready(), ZD_Wait_Destroyed()
  */
 void ZD_Wait_Ready(const int32_t thread_id_list[], size_t number_of_items);
+
+
+/* -------------------------------------------------------------------------
+ *
+ *                              Queue management
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Creates a message queue for the calling thread. 
+ *
+ *  Every thread must create its message queue before it can receive 
+ *  asynchronous messages.
+ *
+ *  XSAL pre-allocates queue_size memory buffers of size message_size and 
+ *  places the received messages in the buffers.
+ *
+ *  If the size of the arriving message is greater than message_size then 
+ *  XSAL uses alloc_buf to dynamically allocate a memory buffer (and free_buf
+ *  to release it).
+ *
+ *  If message_size equals zero then memory buffers are not pre-allocated 
+ *  and alloc_buf and free_buf are always used instead.
+ *
+ *  If alloc_buf and free_buf are NULL, the message is dropped when its size
+ *  is greater than message_size.
+ *
+ *  @note Pre-allocated buffers are fast (memory allocation/de-allocation
+ *        is not required) but more memory may be used because queue_size 
+ *        buffers are always needed (even if the queue is partially empty).
+ *
+ *  @note When a thread is terminated, its message queue is destroyed
+ *        automatically.
+ *
+ *  @param [in] queue_size    maximum number of messages the queue can have
+ *  @param [in] message_size  maximum message size (pre-allocated 
+ *                            buffer size)
+ *  @param [in] alloc_buf     pointer to the function allocating memory 
+ *                            for arriving messages
+ *  @param [in] free_buf      pointer to the function freeing memory used 
+ *                            by messages
+ *  @return  true on success, false on failure
+ *
+ *  @see ZD_Send(), ZD_Publish(),
+ *       ZD_Receive(), ZD_Receive_From(), 
+ *       ZD_Declare_Urgent(), ZD_Undeclare_Urgent(),
+ *       ZD_Subscribe(), ZD_Unsubscribe()
+ */
+bool ZD_Create_Queue(size_t queue_size, size_t message_size, void* (*alloc_buf)(size_t size), void (*free_buf)(void* buf));
+
+
+
 
 
 
