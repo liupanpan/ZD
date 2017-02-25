@@ -26,6 +26,23 @@ extern "C"
       abort();                            \
    } while(0)
 
+#define SAL_POST(cond)                    \
+   do                                     \
+   {                                      \
+      if (!(cond))                        \
+      {                                   \
+         printf("SAL_POST(" #cond ")");  \
+         abort();                         \
+      }                                   \
+   } while(0)
+
+#define SAL_POST_FAILED()                 \
+   do                                     \
+   {                                      \
+      printf("SAL_POST_FAILED()");       \
+      abort();                            \
+   } while(0)
+
 
 
 

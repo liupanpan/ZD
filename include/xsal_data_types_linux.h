@@ -23,5 +23,9 @@ typedef struct SAL_Mutex_Attr_Tag
 
 
 
+#if !defined(EOK)
+#define EOK 0
+#endif /* !EOK */
+
 #endif /* XSAL_DATA_TYPES_LINUX_H */
 
