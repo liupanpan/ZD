@@ -96,44 +96,41 @@ typedef struct SAL_Message_Queue_Tag
    void (*free_buf)(void *buf);
 } SAL_Message_Queue_T;
 
-/** Function creates a message queue. 
- *
- *  Each queue has its own callback functions to allocate and free memory 
- *  for queue elements. The pre-allocated buffers, alloc_buf and free_buf 
- *  or function operating on buffer pools could be used or user can define
- *  their own functions.
- * 
- *  Queue pre-allocates queue_size memory buffers of size message_size and 
- *  places the received messages in the buffers.
- *  If a message arrives which size is greater than message_size then XSAL 
- *  uses alloc_buf to dynamically allocate a memory buffer (and free_buf 
- *  to release it).
- *
- *  If message_size equals zero then memory buffers are not pre-allocated 
- *  and alloc_buf and free_buf are always used instead.
- *
- *  @note Pre-allocated buffers are fast (memory allocation/de-allocation
- *        is not required) but more memory may be used because queue_size 
- *        buffers are always needed (even if the queue is not full).
- *
- *  @param [in] queue       queue to be created
- *  @param [in] queue_size  defines queue size
- *  @param [in] buffer_size defines size of message
- *  @param [in] alloc_buf   pointer to the function which allocates memory 
- *                          for queue element
- *  @param [in] free_buf    pointer to the function which frees unused queue 
- *                          memory
- *
- *  @return 0 on failure
- *
- *  @pre Function SAL_Init_Queue_Structure() must be called before.
- *
- *  @see SAL_Init_Queue_Structure(), SAL_Destroy_Message_Queue(), 
- *       SAL_I_Post_Message(), SAL_I_Pend_Message(), SAL_I_Release_Message()
+/** Pointer to the "Queue full" callback
  */
+extern SAL_Message_Dropped_Callback_T SAL_I_Message_Dropped_Callback;
+
+SAL_Message_Queue_Node_T* SAL_I_Get_Free_Node(SAL_Message_Queue_T* queue, bool is_urgent, size_t data_size,SAL_Message_Dropped_Reason_T* err);
+
+void SAL_I_Remove_Node_From_List(SAL_Message_Queue_Node_T* node);
+
+void SAL_I_Free_Message_Data_Buffer(SAL_Message_Queue_Node_T* node);
+
+void SAL_I_Add_Node_To_Free_List(SAL_Message_Queue_Node_T* node);
+
+void SAL_I_Free_Node(SAL_Message_Queue_Node_T* node);
+
+void SAL_I_Post_Message_Node(SAL_Message_Queue_Node_T* node, bool is_urgent);
+
+bool SAL_I_Init_Queue_Structure(SAL_Message_Queue_T* queue);
+
+void SAL_I_Deinit_Queue_Structure(SAL_Message_Queue_T* queue);
+
 bool SAL_I_Create_Message_Queue(SAL_Message_Queue_T* queue, size_t queue_size,size_t buffer_size,void* (*alloc_buf)(size_t size),void (*free_buf)(void *buf));
 
+void SAL_I_Destroy_Message_Queue(SAL_Message_Queue_T* queue);
 
+bool SAL_I_Post_Message(SAL_Message_Queue_T* queue, const SAL_Message_T* message, bool is_urgent,SAL_Message_Dropped_Reason_T* err);
+
+SAL_Message_T* SAL_I_Pend_Message(SAL_Message_Queue_T* queue);
+
+SAL_Message_T* SAL_I_Try_Pend_Message(SAL_Message_Queue_T* queue);
+
+SAL_Message_T* SAL_I_Pend_Message_Timeout(SAL_Message_Queue_T* queue, uint32_t timeout_ms);
+
+void SAL_I_Release_Message(SAL_Message_T* message);
+
+void SAL_I_Remove_Node_From_Queue(SAL_Message_Queue_Node_T* node);
 
 #ifdef __cplusplus
 }

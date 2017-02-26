@@ -25,12 +25,58 @@ typedef uint32_t   SAL_Clock_T;
 
 #include "xsal_data_types_linux.h"
 
+/* -------------------------------------------------------------------------
+ *
+ *                           Thread management
+ *
+ * -----------------------------------------------------------------------*/
+/** Thread ID of the Router Thread
+ */
+#define SAL_ROUTER_THREAD_ID 0
+#define SAL_UNKNOWN_THREAD_ID (-1)
+/** Command ID's for Router Thread
+ */
+enum SAL_RT_Event_T
+{
+   EV_RT_DT_Command   = -1,
+   EV_RT_Last_Command = -2
+};
 
 /* -------------------------------------------------------------------------
  *
  *                           Queue management
  *
  * -----------------------------------------------------------------------*/
+/* Forward declaration */
+
+ struct SAL_Message_Queue_Node_Tag;
+
+/** List of reasons why the message has been dropped.
+ */
+typedef enum SAL_Message_Dropped_Reason_Tag
+{
+   /** Destination queue doesn't exist.
+    */
+   SAL_No_Queue,
+
+   /** Destination queue is full.
+    */
+   SAL_Queue_Full,
+
+   /** Memory for the message couldn't be allocated.
+    */
+   SAL_No_Memory,
+
+   /** Memory allocation function is not defined 
+    *  and pre-allocated buffer is too small.
+    */
+   SAL_Too_Small_Buffer,
+
+   /** There was a communication error during message transmission.
+    */
+   SAL_Communication_Error
+} SAL_Message_Dropped_Reason_T;
+
 /** Structure with the message header.
  */
 typedef struct SAL_Message_Tag
@@ -98,7 +144,7 @@ typedef struct SAL_Stat_Queue_Tag
 } SAL_Stat_Queue_T;
 
 
-
+typedef void (* SAL_Message_Dropped_Callback_T)(SAL_Thread_Id_T thread_id, SAL_Message_Dropped_Reason_T reason, const SAL_Message_T* message);
 
 #ifdef __cplusplus
 }

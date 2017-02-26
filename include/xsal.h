@@ -292,6 +292,36 @@ bool SAL_Create_Queue(size_t queue_size,size_t message_size,void* (*alloc_buf)(s
  */ 
 bool SAL_Stat_Queue(SAL_Thread_Id_T thread_id, SAL_Stat_Queue_T* queue_stat);
 
+/* -------------------------------------------------------------------------
+ *
+ *                           Message passing
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Puts a message into the queue of the specified thread.
+ *
+ *  @note Function SAL_Send() also can be used to achieve limited event 
+ *        publication. When thread ID equals zero, SAL_Send() publishes 
+ *        the event only in the specified application.
+ *
+ *  @param [in] app_id     ID of the application to send the message to 
+ *  @param [in] thread_id  ID of the thread to send the message to 
+ *  @param [in] event_id   ID of the message
+ *  @param [in] data       pointer to message data
+ *  @param [in] data_size  size of message data
+ *
+ *  @return                true on success, false on failure
+ *
+ *  @see SAL_Declare_Urgent(), SAL_Undeclare_Urgent(), SAL_Publish()
+ */ 
+bool SAL_Send(SAL_App_Id_T app_id, SAL_Thread_Id_T thread_id, SAL_Event_Id_T event_id, const void* data, size_t data_size);
+
+
+
+
+
+
+
 
 
 #ifdef __cplusplus

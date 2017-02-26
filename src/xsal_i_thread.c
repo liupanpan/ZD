@@ -32,5 +32,19 @@ SAL_I_Thread_Attr_T* SAL_I_Get_Thread_Attr(void)
    return (SAL_I_Thread_Attr_T*)SAL_I_TLS_Get_Specific(SAL_I_Thread_Id_Self);
 }
 
+/** Returns SAL Thread Id.
+ */
+SAL_Thread_Id_T SAL_I_Get_Thread_Id(void)
+{
+   SAL_I_Thread_Attr_T* thread_attr = (SAL_I_Thread_Attr_T*)SAL_I_TLS_Get_Specific(SAL_I_Thread_Id_Self);
+
+   return (thread_attr != NULL) ? thread_attr->thread_id : SAL_ROUTER_THREAD_ID;
+}
+
+
+
+
+
+
 
 

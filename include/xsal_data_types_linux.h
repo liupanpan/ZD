@@ -32,6 +32,17 @@ typedef struct SAL_Semaphore_Attr_Tag
 
 #define SAL_DEFAULT_SEMAPHORE_ATTR { 0 }
 
+
+/**
+ *  Connection to SAL synchronous channel type.
+ */
+typedef struct SAL_Connection_Tag
+{
+   pid_t app_pid;
+   int socket_d;
+   uid_t user_id;
+} SAL_Connection_T;
+
 /* -------------------------------------------------------------------------
  *
  *                           Thread management

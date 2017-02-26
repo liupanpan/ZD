@@ -86,6 +86,9 @@ extern SAL_I_Thread_Attr_T* SAL_I_Thread_Table;
  */
 void* SAL_I_TLS_Get_Specific(SAL_TLS_Key_T tls_key);
 
+/** Returns SAL Thread Id.
+ */
+SAL_Thread_Id_T  SAL_I_Get_Thread_Id(void);
 
 /** Returns pointer to the calling thread attributes
  */

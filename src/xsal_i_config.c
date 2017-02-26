@@ -1,6 +1,10 @@
 #include "xsal_i_config.h"
 #include "xsal_settings.h"
 
+/** Identifier of XSAL Application
+ */
+SAL_App_Id_T  SAL_I_App_Id;
+
 /** Maximum number of XSAL threads the application can have.
  *  This variable also defines maximum value for the XSAL thread identifier.
  */
