@@ -48,6 +48,18 @@ bool SAL_Create_Mutex(SAL_Mutex_T* mutex, const SAL_Mutex_Attr_T* attr);
 bool SAL_Destroy_Mutex(SAL_Mutex_T* mutex);
 
 /**
+ *  Locks a mutex.
+ *
+ *  @param [in] mutex  pointer to the mutex to be locked
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see SAL_Create_Mutex(), SAL_Try_Lock_Mutex(), 
+ *       SAL_Lock_Mutex_Timeout(), SAL_Unlock_Mutex()
+ */
+bool SAL_Lock_Mutex(SAL_Mutex_T* mutex);
+
+/**
  *  Attempts to lock a mutex.
  *
  *  If the mutex is already locked, the calling thread blocks until 
@@ -62,7 +74,6 @@ bool SAL_Destroy_Mutex(SAL_Mutex_T* mutex);
  *       SAL_Try_Lock_Mutex(),SAL_Unlock_Mutex()
  */
 bool SAL_Lock_Mutex_Timeout(SAL_Mutex_T* mutex, uint32_t timeout_msec);
-
 
 /**
  *  Attempts to lock a mutex.
@@ -173,6 +184,52 @@ bool SAL_Try_Wait_Semaphore(SAL_Semaphore_T* sem);
  *  @see SAL_Create_Semaphore(), SAL_Wait_Semaphore(), 
  */
 bool SAL_Signal_Semaphore(SAL_Semaphore_T* sem);
+
+/* -------------------------------------------------------------------------
+ *
+ *                              Buffer Pools
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Creates a buffer pool.
+ *
+ *  @param [in] number_of_buffers  number of buffers in the pool
+ *  @param [in] buffer_size        size of each buffer
+ *  @param [out] pool_id           pointer to the returned buffer 
+ *                                 pool identifier
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see SAL_Alloc_Buffer(), SAL_Free_Buffer()
+ */
+bool SAL_Create_Buffer_Pool(size_t number_of_buffers, size_t buffer_size, SAL_Buffer_Pool_Id_T* pool_id);
+
+/**
+ *  Destroys the specified buffer pool.
+ *
+ *  @param [in] pool_id  buffer pool to be destroyed
+ * 
+ *  @see SAL_Create_Buffer_Pool()
+ */
+void SAL_Destroy_Buffer_Pool(SAL_Buffer_Pool_Id_T pool_id);
+
+/**
+ *  Allocates a buffer from the specified buffer pool.
+ *
+ *  @param [in] pool_id  identifier of the buffer pool to allocate
+ *                       the buffer from
+ *
+ *  @return  pointer to the allocated buffer or NULL on error
+ */
+void* SAL_Alloc_Buffer(SAL_Buffer_Pool_Id_T pool_id);
+
+/**
+ *  Returns the given buffer to its pool.
+ *
+ *  @param [in] buffer  pointer to the allocated buffer
+ *
+ */
+void SAL_Free_Buffer(void* buffer);
 
 
 
