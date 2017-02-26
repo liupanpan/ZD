@@ -316,6 +316,34 @@ bool SAL_Stat_Queue(SAL_Thread_Id_T thread_id, SAL_Stat_Queue_T* queue_stat);
  */ 
 bool SAL_Send(SAL_App_Id_T app_id, SAL_Thread_Id_T thread_id, SAL_Event_Id_T event_id, const void* data, size_t data_size);
 
+/* -------------------------------------------------------------------------
+ *
+ *                            Event subscribtion
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Subscribes the calling thread to published events.
+ *
+ *  Published events are delivered only to threads subscribed to them.
+ *
+ *  It is possible to call SAL_Subscribe() / SAL_Unsubscribe() 
+ *  (@see SAL_Unsubscribe()) more than once 
+ *  (and with different sets of events). The newly subscribed/unsubscribed 
+ *  events will be added to/removed from the set of already subscribed ones.
+ *
+ *  @note Functions SAL_Declare_Urgent() and SAL_Undeclare_Urgent() 
+ *        work with subscribed events too.
+ *
+ *  @param [in] event_id_list     list of events to subscribe to
+ *  @param [in] number_of_events  number of events to subscribe to
+ *
+ *  @return true on success, false on failure
+ *
+ *  @see SAL_Unsubscribe(), SAL_Publish(), SAL_Local_Publish(), 
+ *       SAL_Declare_Urgent(), SAL_Undeclare_Urgent()
+ */
+bool SAL_Subscribe(const SAL_Event_Id_T event_id_list[], size_t number_of_events);
+
 
 
 
