@@ -357,6 +357,23 @@ bool SAL_Subscribe(const SAL_Event_Id_T event_id_list[], size_t number_of_events
  */
 bool SAL_Unsubscribe(const SAL_Event_Id_T event_id_list[], size_t number_of_events);
 
+/* -------------------------------------------------------------------------
+ *
+ *                           Message publishing
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Deliveres an event to all subscribers (in all applications 
+ *  in the system) at once.
+ *
+ *  @param [in] event_id   event identifier
+ *  @param [in] data       data to be delivered with the event
+ *  @param [in] data_size  size of data
+ *
+ *  @see SAL_Subscribe(), SAL_Unsubscribe(), SAL_Local_Publish(), 
+ *       SAL_Declare_Urgent(), SAL_Undeclare_Urgent()
+ */ 
+void SAL_Publish(SAL_Event_Id_T event_id, const void* data, size_t data_size);
 
 
 
