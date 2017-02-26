@@ -20,6 +20,19 @@ typedef struct SAL_Mutex_Attr_Tag
 
 #define SAL_DEFAULT_MUTEX_ATTR { false }
 
+/**
+ *  SAL Semaphore type.
+ */
+typedef sem_t SAL_Semaphore_T;
+
+typedef struct SAL_Semaphore_Attr_Tag
+{
+   uint32_t initial_value;
+} SAL_Semaphore_Attr_T;
+
+#define SAL_DEFAULT_SEMAPHORE_ATTR { 0 }
+
+
 
 
 

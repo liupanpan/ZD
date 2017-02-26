@@ -90,6 +90,94 @@ bool SAL_Try_Lock_Mutex(SAL_Mutex_T* mutex);
  */
 bool SAL_Unlock_Mutex(SAL_Mutex_T* mutex);
 
+/* -------------------------------------------------------------------------
+ *
+ *                              SAL Semaphore
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Initializes semaphore attributes.
+ *
+ *  @param [out]  attr  semaphore attributes
+ *
+ *  @see SAL_Create_Semaphore()
+ */
+void SAL_Init_Semaphore_Attr(SAL_Semaphore_Attr_T* attr);
+
+/**
+ *  Creates a semaphore.
+ *
+ *  @param [out] sem   pointer to the semaphore to be created
+ *  @param [in]  attr  semaphore attributes.
+ *
+ *  @note Semafore initial value is defined in structure pointed by 
+ *        attr pointer. If the pointer is equal NULL then initial values 
+ *        is set to 0.
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see SAL_Destroy_Semaphore(), SAL_Wait_Semaphore(), 
+ *       SAL_Signal_Semaphore()
+ */
+bool SAL_Create_Semaphore(SAL_Semaphore_T* sem, const SAL_Semaphore_Attr_T* attr);
+
+/**
+ *  Destroys a semaphore.
+ *
+ *  @param [in] sem  pointer to the semaphore to be destroyed
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see SAL_Create_Semaphore()
+ */
+bool SAL_Destroy_Semaphore(SAL_Semaphore_T* sem);
+
+/**
+ *  Attempts to wait for a semaphore.
+ *
+ *  Suspends the calling thread until the semaphore pointed to by 
+ *  sem has non-zero count.
+ *
+ *  @param [in] sem  pointer to the semaphore to wait for
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see SAL_Create_Semaphore(), SAL_Try_Wait_Semaphore(),
+ *       SAL_Wait_Semaphore_Timeout(), SAL_Signal_Semaphore()
+ */
+bool SAL_Wait_Semaphore(SAL_Semaphore_T* sem);
+
+/**
+ *  Attempts to wait for a semaphore.
+ *
+ *  Function does not block the calling thread if semaphore
+ *  value is equal to zero.
+ *
+ *  @param [in] sem  pointer to the semaphore to wait for
+ *
+ *  @return  true on success, false when semaphore value is zero
+ *           or an error occurs
+ * 
+ *  @see SAL_Create_Semaphore(), SAL_Wait_Semaphore(),
+ *       SAL_Wait_Semaphore_Timeout(), SAL_Signal_Semaphore()
+ */
+bool SAL_Try_Wait_Semaphore(SAL_Semaphore_T* sem);
+
+/**
+ *  Signals a semaphore.
+ *
+ *  @param [in] sem  pointer to the semaphore to be signaled
+ *
+ *  @return  true on success, false on failure
+ *
+ *  @see SAL_Create_Semaphore(), SAL_Wait_Semaphore(), 
+ */
+bool SAL_Signal_Semaphore(SAL_Semaphore_T* sem);
+
+
+
+
+
 
 
 #ifdef __cplusplus
