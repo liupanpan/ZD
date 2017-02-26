@@ -278,7 +278,19 @@ void SAL_Free_Buffer(void* buffer);
  */
 bool SAL_Create_Queue(size_t queue_size,size_t message_size,void* (*alloc_buf)(size_t size),void (*free_buf)(void* buf));
 
-
+/**
+ *  Retrieves the status information and statistics related to 
+ *  a message queue owned by thread thread_id.
+ *
+ *  If a given thread does not have queue, function returns false.
+ *
+ *  @param [in]  thread_id  ID of the thread whose the queue is examined
+ *  @param [out] queue_stat pointer to structure in which queue statistics 
+ *               are returned
+ *
+ *  @return  true on success, false on failure
+ */ 
+bool SAL_Stat_Queue(SAL_Thread_Id_T thread_id, SAL_Stat_Queue_T* queue_stat);
 
 
 

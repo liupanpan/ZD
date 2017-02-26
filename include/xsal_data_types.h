@@ -72,6 +72,31 @@ typedef struct SAL_Message_Tag
    uint16_t timestamp_msec;
 } SAL_Message_T;
 
+/** Structure with the queue statistics data.
+ */
+typedef struct SAL_Stat_Queue_Tag
+{
+   /** Queue size (as passed to SAL_Create_Queue)
+    */
+   size_t queue_size;
+
+   /** Message buffer size (as passed to SAL_Create_Queue)
+    */
+   size_t buffer_size;
+
+   /** Current number of messages in the queue
+    */
+   size_t message_count;
+
+   /** Peak number of enqueued messages (since queue creation)
+    */
+   size_t peak_message_count;
+
+   /** Size of largest enqueued messages (since queue creation)
+    */
+   size_t peak_message_size;
+} SAL_Stat_Queue_T;
+
 
 
 

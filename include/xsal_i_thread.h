@@ -77,6 +77,11 @@ typedef struct SAL_I_Thread_Attr_Tag
 } SAL_I_Thread_Attr_T;
 
 
+/** Pointer to table with thread attributes
+ */
+extern SAL_I_Thread_Attr_T* SAL_I_Thread_Table;
+
+
 /** Function returns value of the key from the Thread Local Storage.
  */
 void* SAL_I_TLS_Get_Specific(SAL_TLS_Key_T tls_key);

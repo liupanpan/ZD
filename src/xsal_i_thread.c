@@ -15,6 +15,10 @@
  */
 SAL_TLS_Key_T SAL_I_Thread_Id_Self;
 
+/** Pointer to table with thread attributes
+ */
+SAL_I_Thread_Attr_T* SAL_I_Thread_Table;
+
 
 void* SAL_I_TLS_Get_Specific(SAL_TLS_Key_T tls_key)
 {
