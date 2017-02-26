@@ -344,7 +344,18 @@ bool SAL_Send(SAL_App_Id_T app_id, SAL_Thread_Id_T thread_id, SAL_Event_Id_T eve
  */
 bool SAL_Subscribe(const SAL_Event_Id_T event_id_list[], size_t number_of_events);
 
-
+/**
+ *  Unsubscribes the calling thread from events.
+ *
+ *  @param [in] event_id_list     list of events to unsubscribe from
+ *  @param [in] number_of_events  number of events to unsubscribe from
+ *
+ *  @return true on success, false on failure
+ *
+ *  @see SAL_Subscribe(), SAL_Publish(), SAL_Local_Publish(), 
+ *       SAL_Declare_Urgent(), SAL_Undeclare_Urgent()
+ */
+bool SAL_Unsubscribe(const SAL_Event_Id_T event_id_list[], size_t number_of_events);
 
 
 
