@@ -23,9 +23,54 @@ typedef SAL_Int_T  SAL_Port_Id_T;
 typedef SAL_Int_T  SAL_Shared_Memory_Key_T;
 typedef uint32_t   SAL_Clock_T;
 
-
-
 #include "xsal_data_types_linux.h"
+
+
+/* -------------------------------------------------------------------------
+ *
+ *                           Queue management
+ *
+ * -----------------------------------------------------------------------*/
+/** Structure with the message header.
+ */
+typedef struct SAL_Message_Tag
+{
+   /** Send time (seconds).
+    */
+   time_t timestamp_sec;
+
+   /** Size of data associated with the message.
+    */
+   size_t data_size;
+
+   /** Pointer to message data.
+    */
+   void* data;
+
+   /** Event ID.
+    */
+   SAL_Event_Id_T  event_id;
+
+   /** Object ID (reserved for XSAL C++ wrapper).
+    */
+   int16_t object_id;
+
+   /** ID of application sending the message.
+    */
+   SAL_App_Id_T sender_app_id;
+
+   /** ID of thread sending the message.
+    */
+   SAL_Thread_Id_T  sender_thread_id;
+
+   /** ID of the receiver thread.
+    */
+   SAL_Thread_Id_T  receiver_thread_id;
+
+   /** Send time (milliseconds).
+    */
+   uint16_t timestamp_msec;
+} SAL_Message_T;
 
 
 
