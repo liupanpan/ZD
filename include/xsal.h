@@ -375,7 +375,35 @@ bool SAL_Unsubscribe(const SAL_Event_Id_T event_id_list[], size_t number_of_even
  */ 
 void SAL_Publish(SAL_Event_Id_T event_id, const void* data, size_t data_size);
 
-
+/* -------------------------------------------------------------------------
+ *
+ *                           Timer management
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Creates a timer sending an event upon expiration.
+ *  After creation, the timer is not running yet. 
+ *  It is started with a call to SAL_Start_Timer().
+ *
+ *  @note XSAL timer events are sent only to the thread that has created 
+ *        the timer. Threads do not have to subscribe to timer events to 
+ *        receive them. Timer events do not carry any data, only event ID. 
+ *        Timers can be single-shot or periodic. 
+ *
+ *  @note Only the thread that created the timer may start 
+ *        (by calling SAL_Start_Timer()), stop (by calling SAL_Stop_Timer()) 
+ *        or destroy it (by calling SAL_Destroy_Timer()).
+ *        In other words, timers are local to threads creating them.
+ *
+ *  @param [in]  event_id  ID of event which is sent upon timer expiration
+ *  @param [out] timer_id  ID of the timer
+ *
+ *  @return true on succes, false on failure
+ *
+ *  @see SAL_Start_Timer(), SAL_Stop_Timer(), SAL_Destroy_Timer(), 
+ *       SAL_Destroy_Thread()
+ */
+bool SAL_Create_Timer(SAL_Event_Id_T event_id, SAL_Timer_Id_T* timer_id);
 
 
 

@@ -81,6 +81,9 @@ typedef struct SAL_I_Thread_Attr_Tag
  */
 extern SAL_I_Thread_Attr_T* SAL_I_Thread_Table;
 
+/** Mutex to synchronize access to SAL_I_Thread_Table
+ */
+extern SAL_Mutex_T  SAL_I_Thread_Table_Mutex;
 
 /** Function returns value of the key from the Thread Local Storage.
  */

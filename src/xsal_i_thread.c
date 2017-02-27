@@ -19,6 +19,10 @@ SAL_TLS_Key_T SAL_I_Thread_Id_Self;
  */
 SAL_I_Thread_Attr_T* SAL_I_Thread_Table;
 
+/** Mutex to synchronize access to SAL_I_Thread_Table
+ */
+SAL_Mutex_T SAL_I_Thread_Table_Mutex;
+
 
 void* SAL_I_TLS_Get_Specific(SAL_TLS_Key_T tls_key)
 {
