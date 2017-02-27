@@ -30,6 +30,30 @@ void SAL_I_Bind_Timer_To_Thread(SAL_I_Timer_T* timer)
    thread_attr->thread_timers = timer;
 }
 
+void SAL_I_Unbind_Timer_From_Thread(SAL_I_Timer_T* timer)
+{
+   SAL_I_Thread_Attr_T* thread_attr = &SAL_I_Thread_Table[timer->thread_id];
+
+   if (timer->next_thread_timer != NULL)
+   {
+      timer->next_thread_timer->prev_thread_timer = timer->prev_thread_timer;
+   }
+
+   if (timer->prev_thread_timer != NULL)
+   {
+      timer->prev_thread_timer->next_thread_timer = timer->next_thread_timer;
+   }
+   else
+   {
+      thread_attr->thread_timers = timer->next_thread_timer;
+   }
+}
+
+
+
+
+
+
 
 
 

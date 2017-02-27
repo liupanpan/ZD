@@ -17,6 +17,9 @@ extern SAL_App_Id_T  SAL_I_App_Id;
  */
 extern size_t  SAL_I_Max_Number_Of_Threads;
 
+/** Defines maximum number of SAL timers per process
+ */
+extern size_t  SAL_I_Max_Number_Of_Timers;
 
 /** Maximum number of buffer pools, application will have
  */

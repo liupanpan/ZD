@@ -48,9 +48,20 @@ extern SAL_Mutex_T SAL_I_Timers_Mutex;
 bool SAL_I_Create_Timer(SAL_I_Timer_T* timer);
 
 
+/** Function destroys given timer.
+ */
+void SAL_I_Destroy_Timer(SAL_I_Timer_T* timer);
+
+
 /** Function binds timer with given id to the given thread.
  */
 void SAL_I_Bind_Timer_To_Thread(SAL_I_Timer_T* timer);
+
+/**
+ *  Function unbinds timer with given id to the given thread.
+ */
+void SAL_I_Unbind_Timer_From_Thread(SAL_I_Timer_T* timer);
+
 
 
 

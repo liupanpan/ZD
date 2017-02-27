@@ -10,6 +10,10 @@ SAL_App_Id_T  SAL_I_App_Id;
  */
 size_t  SAL_I_Max_Number_Of_Threads;
 
+/** Defines maximum number of XSAL timers per process.
+ */
+size_t  SAL_I_Max_Number_Of_Timers;
+
 /** Maximum number of buffer pools, application will have.
  */
 size_t  SAL_I_Max_Number_Of_Buffer_Pools;
