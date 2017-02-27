@@ -417,6 +417,24 @@ bool SAL_Create_Timer(SAL_Event_Id_T event_id, SAL_Timer_Id_T* timer_id);
  */
 void  SAL_Destroy_Timer(SAL_Timer_Id_T timer_id);
 
+/**
+ *  Starts the timer identified by timer_id.
+ *  Timer interval is given in milliseconds but timer resolution 
+ *  depends on the underlying operating system. 
+ *
+ *  Parameter is_periodic defines the timer as periodic or single-shot.
+ *
+ *  @param [in] timer_id       ID of the timer to be started
+ *  @param [in] interval_msec  timer interval
+ *  @param [in] is_periodic    timer mode: single-shot if false, 
+ *                             periodic otherwise
+ *
+ *  @see SAL_Create_Timer(), SAL_Start_Timer_Ex(), SAL_Stop_Timer(),
+ *       SAL_Destroy_Timer()
+ */
+void SAL_Start_Timer(SAL_Timer_Id_T timer_id, uint32_t interval_msec, bool is_periodic);
+
+
 
 
 

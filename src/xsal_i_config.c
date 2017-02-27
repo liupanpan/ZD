@@ -17,3 +17,8 @@ size_t  SAL_I_Max_Number_Of_Timers;
 /** Maximum number of buffer pools, application will have.
  */
 size_t  SAL_I_Max_Number_Of_Buffer_Pools;
+
+/** Defines clock by XSAL for timer implementation.
+ *  If it is not defined by the user then CLOCK_REALTIME is used.
+ */
+SAL_Int_T SAL_I_Timer_Signal_Clock_Id = SAL_I_TIMER_SIGNAL_CLOCK_ID;

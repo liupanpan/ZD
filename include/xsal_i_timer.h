@@ -52,6 +52,17 @@ bool SAL_I_Create_Timer(SAL_I_Timer_T* timer);
  */
 void SAL_I_Destroy_Timer(SAL_I_Timer_T* timer);
 
+/** Function starts given timer.
+ */
+void SAL_I_Start_Timer(SAL_I_Timer_T* timer,uint32_t interval_msec,bool is_periodic,bool use_param,uintptr_t param);
+
+/** Function stops given timer.
+ */
+void SAL_I_Stop_Timer(SAL_I_Timer_T* timer);
+
+/** Function creates and post message to the message queue.
+ */
+void SAL_I_Post_Timer_Event(SAL_Event_Id_T event_id,SAL_Thread_Id_T thread_id,bool use_param,uintptr_t param);
 
 /** Function binds timer with given id to the given thread.
  */

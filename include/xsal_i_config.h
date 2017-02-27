@@ -25,6 +25,10 @@ extern size_t  SAL_I_Max_Number_Of_Timers;
  */
 extern size_t  SAL_I_Max_Number_Of_Buffer_Pools;
 
+/** Defines clock by XSAL for timer implementation.
+ *  If it is not defined by the user then CLOCK_REALTIME is used.
+ */
+extern SAL_Int_T SAL_I_Timer_Signal_Clock_Id;
 
 
 #ifdef __cplusplus
