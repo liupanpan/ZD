@@ -446,6 +446,14 @@ void SAL_Start_Timer(SAL_Timer_Id_T timer_id, uint32_t interval_msec, bool is_pe
  */
 void  SAL_Stop_Timer(SAL_Timer_Id_T timer_id); 
 
+/* -------------------------------------------------------------------------
+ *
+ *                           Thread management
+ *
+ * -------------------------------------------------------------------------*/
+void SAL_Init_Thread_Attr(SAL_Thread_Attr_T* attr);
+
+
 
 
 
