@@ -12,6 +12,17 @@
 #include <signal.h>
 #include <sys/resource.h>
 
+/** Semaphore to synchronize startup and shutdown of the Timer Thread
+ */
+static SAL_Semaphore_T Timer_Sem;
+
+/** Flag if if Timer Thread is running
+ */
+static bool Is_Timer_Thread_Running;
+
+/** Handler to the Timer Thread
+ */
+static SAL_OS_TID_T Timer_Thread_Id;
 
 /** Handler to the OS timer
  */
@@ -24,6 +35,8 @@ static SAL_I_Timer_T* Running_Timers_List;
 /** Mutex to synchronize the Running_Timers_List table access
  */
 static SAL_Mutex_T Running_Timers_List_Mutex;
+
+static int32_t SAL_I_Exit_Value;
 
 static SAL_I_Timer_T* Find_Timer_Position_In_The_List(SAL_I_Timer_T* timer)
 {
@@ -149,6 +162,14 @@ static void Update_Expiration_Time(struct timespec* t1, uint32_t t2)
       t1->tv_nsec -= 1000000000;
       t1->tv_sec++;
    }   
+}
+
+void SAL_I_Stop_RT_Light(int32_t status)
+{
+   Is_Timer_Thread_Running = false;
+   (void)pthread_kill(Timer_Thread_Id, SAL_I_Timer_Signal_Id);
+   (void)SAL_Wait_Semaphore(&Timer_Sem);
+   SAL_I_Exit_Value = status;
 }
 
 bool SAL_I_Create_Timer(SAL_I_Timer_T* timer)

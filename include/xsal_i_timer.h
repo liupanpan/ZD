@@ -42,6 +42,9 @@ extern SAL_I_Timer_T* SAL_I_Timers_Free_List;
  */
 extern SAL_Mutex_T SAL_I_Timers_Mutex;
 
+/** Function terminates Router Thread Light.
+ */
+void SAL_I_Stop_RT_Light(int32_t status);
 
 /** Function creates timer with given ID.
  */
@@ -73,7 +76,13 @@ void SAL_I_Bind_Timer_To_Thread(SAL_I_Timer_T* timer);
  */
 void SAL_I_Unbind_Timer_From_Thread(SAL_I_Timer_T* timer);
 
+/** Function destroys all timers created by given thread.
+ */
+void SAL_I_Destroy_And_Unbind_Timers_From_Thread(SAL_I_Thread_Attr_T* thread_attr);
 
+/** Function destroys all timers created by given thread.
+ */
+void SAL_I_Destroy_And_Unbind_Timers_From_Thread(SAL_I_Thread_Attr_T* thread_attr);
 
 
 #ifdef __cplusplus

@@ -8,6 +8,27 @@
 #include <stdlib.h>
 #include <sys/timeb.h>
 
+/** Function is called when given thread has finished its job 
+ *  or has been terminated.
+ *  It unsubscribes from LRT events subscribed by given thread.
+ *  If any event was subscribed only by the given thread (it isn't
+ *  subscribed by any other thread), then it is also unsubscribed 
+ *  from Naming Service.
+ */
+void SAL_I_Unsubscribe_Thread_Events(SAL_Thread_Id_T thread_id)
+{
+   SAL_Event_Id_T ev_id;
+   uint8_t* event_properties = SAL_I_Thread_Event_Property(thread_id);
+
+   /*for(ev_id = EV_FIRST_EVENT_ID; ev_id < EV_LAST_EVENT_ID; ev_id++)
+   {
+      if (event_properties[ev_id] & SAL_I_Subscribe_Bit_Mask)
+      {
+         event_properties[ev_id] &= ~SAL_I_Subscribe_Bit_Mask;
+      }
+   }*/
+}
+
 /**
  *  Function sends given message to all subscribed threads.
  */

@@ -453,6 +453,23 @@ void  SAL_Stop_Timer(SAL_Timer_Id_T timer_id);
  * -------------------------------------------------------------------------*/
 void SAL_Init_Thread_Attr(SAL_Thread_Attr_T* attr);
 
+SAL_Thread_Id_T  SAL_Create_Thread(void (*thread_function)(void*), void* param, const SAL_Thread_Attr_T* attr);
+
+/* -------------------------------------------------------------------------
+ *
+ *              Thread synchronization at startup/termination
+ *
+ * -------------------------------------------------------------------------*/
+/**
+ *  Suspends its caller until all threads in thread_id_list
+ *  have called SAL_Signal_Ready().
+ *
+ *  @param [in] thread_id_list   list of IDs of threads to wait for
+ *  @param [in] number_of_items  number of thread IDs on the list
+ *
+ *  @see SAL_Signal_Ready(), SAL_Wait_Destroyed()
+ */
+void SAL_Wait_Ready(const SAL_Thread_Id_T thread_id_list[], size_t number_of_items);
 
 
 

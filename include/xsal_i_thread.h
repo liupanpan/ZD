@@ -76,6 +76,13 @@ typedef struct SAL_I_Thread_Attr_Tag
 
 } SAL_I_Thread_Attr_T;
 
+/** Thread Local Storage Key with SAL Thread ID.
+ */
+extern SAL_TLS_Key_T SAL_I_Thread_Id_Self;
+
+/** Number of currently running SAL threads started by user.
+ */
+extern size_t SAL_I_Number_Of_Running_User_Threads;
 
 /** Pointer to table with thread attributes
  */
@@ -85,9 +92,21 @@ extern SAL_I_Thread_Attr_T* SAL_I_Thread_Table;
  */
 extern SAL_Mutex_T  SAL_I_Thread_Table_Mutex;
 
+/** Function assigns value to key in the Thread Local Storage.
+ */
+bool SAL_I_TLS_Set_Specific(SAL_TLS_Key_T tls_key, const void* value);
+
 /** Function returns value of the key from the Thread Local Storage.
  */
 void* SAL_I_TLS_Get_Specific(SAL_TLS_Key_T tls_key);
+
+/** Function sets priority for given thread.
+ */
+bool SAL_I_Set_Thread_Priority(SAL_Thread_Id_T thread_id, SAL_Priority_T priority);
+
+/** Function frees thread's resources
+ */
+void SAL_I_Free_Thread_Resources(SAL_Thread_Id_T thread_id);
 
 /** Returns SAL Thread Id.
  */
@@ -97,6 +116,7 @@ SAL_Thread_Id_T  SAL_I_Get_Thread_Id(void);
  */
 SAL_I_Thread_Attr_T*  SAL_I_Get_Thread_Attr(void);
 
+pid_t SAL_I_Get_Linux_Tid(void);
 
 #endif /* XSAL_I_THREAD_H */
 

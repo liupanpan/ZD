@@ -49,11 +49,27 @@ void SAL_I_Unbind_Timer_From_Thread(SAL_I_Timer_T* timer)
    }
 }
 
-void SAL_I_Post_Timer_Event(
-   SAL_Event_Id_T event_id, 
-   SAL_Thread_Id_T thread_id,
-   bool use_param,
-   uintptr_t param)
+void SAL_I_Destroy_And_Unbind_Timers_From_Thread(SAL_I_Thread_Attr_T* thread_attr)
+{
+   SAL_I_Timer_T* timer = thread_attr->thread_timers;
+
+   while(timer != NULL)
+   {
+      if (SAL_Lock_Mutex(&SAL_I_Timers_Mutex))
+      {
+         SAL_I_Timer_T* to_delete = timer;
+         timer = timer->next_thread_timer;
+         SAL_I_Destroy_Timer(to_delete);
+         to_delete->event_id = -1;
+         to_delete->next_thread_timer = SAL_I_Timers_Free_List;
+         SAL_I_Timers_Free_List = to_delete;
+         (void)SAL_Unlock_Mutex(&SAL_I_Timers_Mutex);
+      }
+   }
+   thread_attr->thread_timers = NULL;
+}
+
+void SAL_I_Post_Timer_Event(SAL_Event_Id_T event_id, SAL_Thread_Id_T thread_id, bool use_param, uintptr_t param)
 {
    bool send_status;
    SAL_Message_T msg;
