@@ -465,6 +465,8 @@ bool  SAL_Set_Thread_Priority(SAL_Thread_Id_T thread_id, SAL_Priority_T priority
 
 bool  SAL_Get_Thread_Priority(SAL_Thread_Id_T thread_id, SAL_Priority_T* priority);
 
+void  SAL_Sleep(uint32_t milliseconds);
+
 /* -------------------------------------------------------------------------
  *
  *              Thread synchronization at startup/termination
