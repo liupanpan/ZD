@@ -463,6 +463,8 @@ const char* SAL_Get_Thread_Name(SAL_Thread_Id_T thread_id);
 
 bool  SAL_Set_Thread_Priority(SAL_Thread_Id_T thread_id, SAL_Priority_T priority);
 
+bool  SAL_Get_Thread_Priority(SAL_Thread_Id_T thread_id, SAL_Priority_T* priority);
+
 /* -------------------------------------------------------------------------
  *
  *              Thread synchronization at startup/termination
