@@ -457,6 +457,8 @@ SAL_Thread_Id_T  SAL_Create_Thread(void (*thread_function)(void*), void* param, 
 
 bool SAL_Is_Thread_Alive(SAL_Thread_Id_T thread_id);
 
+SAL_Thread_Id_T  SAL_Get_Thread_Id(void);
+
 /* -------------------------------------------------------------------------
  *
  *              Thread synchronization at startup/termination

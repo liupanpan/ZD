@@ -135,8 +135,3 @@ void SAL_I_Free_Thread_Resources(SAL_Thread_Id_T thread_id)
 }
 
 
-
-
-
-
-
