@@ -459,6 +459,8 @@ bool SAL_Is_Thread_Alive(SAL_Thread_Id_T thread_id);
 
 SAL_Thread_Id_T  SAL_Get_Thread_Id(void);
 
+const char* SAL_Get_Thread_Name(SAL_Thread_Id_T thread_id);
+
 /* -------------------------------------------------------------------------
  *
  *              Thread synchronization at startup/termination
