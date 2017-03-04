@@ -27,6 +27,50 @@ typedef uint32_t   SAL_Clock_T;
 
 /* -------------------------------------------------------------------------
  *
+ *                           Application management
+ *
+ * -----------------------------------------------------------------------*/
+typedef struct SAL_Config_Tag
+{
+   /** Identifier of XSAL Application.
+    * 
+    *  Application IDs are unique for the whole system -- each XSAL 
+    *  application has its own ID defined in a globally known file
+    *  xsal_application_id.h.
+    */
+   SAL_App_Id_T app_id;
+
+   /** The maximum number of threads the application can have.
+    *
+    *  @note max_number_of_threads may be greater than the 
+    *        actual number of threads in the applications but it shouldn't be 
+    *        too large because XSAL preallocates some resources for all 
+    *        declared threads.
+    */
+   size_t max_number_of_threads;
+   
+   /** The maximum number of timers the application can have.
+    *  If the application doesn't use any timers, then set it to 0.
+    */
+   size_t max_number_of_timers;
+
+   /** The maximum number of buffer pools the application can have.
+    *  If the application doesn't use any buffer pools, then set it to 0.
+    */
+   size_t max_number_of_buffer_pools;
+
+   /** First dynamic thread ID. XSAL threads have numerical IDs. The IDs
+    *  can be allocated by XSAL or defined by the user. All user-defined
+    *  thread IDs must be greater than zero and less than
+    *  first_unknown_thread_id. When XSAL allocates a thread ID, it starts
+    *  at first_unknown_thread_id.
+    */
+   SAL_Thread_Id_T first_unknown_thread_id;
+} SAL_Config_T;
+
+
+/* -------------------------------------------------------------------------
+ *
  *                           Thread management
  *
  * -----------------------------------------------------------------------*/

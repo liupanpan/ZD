@@ -6,7 +6,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-
+#include "xsal_settings.h"
 #include "xsal_data_types.h"
 #include "stdio.h"
 
@@ -483,6 +483,15 @@ void  SAL_Delay(uint32_t microseconds);
  *  @see SAL_Signal_Ready(), SAL_Wait_Destroyed()
  */
 void SAL_Wait_Ready(const SAL_Thread_Id_T thread_id_list[], size_t number_of_items);
+
+/* -------------------------------------------------------------------------
+ *
+ *                          XSAL engine
+ *
+ * -----------------------------------------------------------------------*/
+void SAL_Get_Config(SAL_Config_T* sal_config);
+
+
 
 
 
