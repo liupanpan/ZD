@@ -491,7 +491,7 @@ void SAL_Wait_Ready(const SAL_Thread_Id_T thread_id_list[], size_t number_of_ite
  * -----------------------------------------------------------------------*/
 void SAL_Get_Config(SAL_Config_T* sal_config);
 
-
+bool SAL_Init(const SAL_Config_T* sal_config);
 
 
 

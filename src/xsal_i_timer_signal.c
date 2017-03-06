@@ -172,6 +172,88 @@ void SAL_I_Stop_RT_Light(int32_t status)
    SAL_I_Exit_Value = status;
 }
 
+bool SAL_I_Init_Timer_Module(void)
+{
+   bool status = false;
+
+   SAL_PRE(SAL_I_Timers == NULL);
+
+   if (SAL_I_Timers == NULL)
+   {
+      if (SAL_I_Max_Number_Of_Timers > 0u)
+      {
+         struct sigevent timer_ev_spec;
+         
+         timer_ev_spec.sigev_value.sival_int = 0;
+         timer_ev_spec.sigev_signo = SAL_I_Timer_Signal_Id;
+         timer_ev_spec.sigev_notify = SIGEV_SIGNAL;
+
+         if (timer_create(SAL_I_Timer_Signal_Clock_Id, &timer_ev_spec, &OS_Timer_Id) == EOK)
+         {
+            if (SAL_Create_Mutex(&SAL_I_Timers_Mutex, NULL))
+            {
+               if (SAL_Create_Mutex(&Running_Timers_List_Mutex, NULL))
+               {
+                  if (SAL_Create_Semaphore(&Timer_Sem, NULL))
+                  {
+                     SAL_I_Timers = (SAL_I_Timer_T*)malloc(SAL_I_Max_Number_Of_Timers*sizeof(SAL_I_Timer_T));
+                     if (SAL_I_Timers != NULL)
+                     {
+                        sigset_t sigset;
+
+                        (void)sigemptyset(&sigset);
+                        (void)sigaddset(&sigset, SAL_I_Timer_Signal_Id);
+                        (void)sigprocmask(SIG_BLOCK, &sigset, NULL);
+                        Running_Timers_List = NULL;
+                        status = true;
+                     }
+                     else
+                     {
+                        printf("SAL_I_Init_Timer_Module: memory allocation failed");
+                     }
+                     if (!status)
+                     {
+                        (void)SAL_Destroy_Semaphore(&Timer_Sem);
+                     }
+                  }
+                  if (!status)
+                  {
+                     (void)SAL_Destroy_Mutex(&Running_Timers_List_Mutex);
+                  }
+               }
+               if (!status)
+               {
+                  (void)SAL_Destroy_Mutex(&SAL_I_Timers_Mutex);
+               }
+            }
+            else
+            {
+               printf("SAL_I_Init_Timer_Module/SAL_Create_Mutex() failed. Error=%s", strerror(errno));
+            }
+            if (!status)
+            {
+               (void)timer_delete(OS_Timer_Id);
+            }
+         }
+         else
+         {
+            printf("SAL_I_Init_Timer_Module: timer_create failed. Error=%s", strerror(errno));
+         }
+      }
+      else
+      {
+         printf("SAL_I_Init_Timer_Module: max number of timers == 0");
+         status = true; 
+      }
+   }
+   else
+   {
+      printf("SAL_I_Init_Timer_Module: Timer Module initialized second time without deinitialization");
+   }
+
+   return status;
+}
+
 bool SAL_I_Create_Timer(SAL_I_Timer_T* timer)
 {
    timer = timer; /* remove unused variable warning */

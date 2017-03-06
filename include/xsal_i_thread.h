@@ -116,7 +116,16 @@ SAL_Thread_Id_T  SAL_I_Get_Thread_Id(void);
  */
 SAL_I_Thread_Attr_T*  SAL_I_Get_Thread_Attr(void);
 
+void SAL_I_Configure_RT_Sched_Policy(void);
+
 pid_t SAL_I_Get_Linux_Tid(void);
+
+/** Function initializes thread module. It is called by SAL_Init()
+ */
+bool SAL_I_Init_Thread_Module(void);
+
+
+
 
 #endif /* XSAL_I_THREAD_H */
 

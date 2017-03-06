@@ -31,6 +31,14 @@ SAL_I_Thread_Attr_T* SAL_I_Thread_Table;
  */
 SAL_Mutex_T SAL_I_Thread_Table_Mutex;
 
+#define SAL_I_Get_OS_TID()  pthread_self()
+
+bool SAL_I_TLS_Key_Create(SAL_TLS_Key_T* tls_key)
+{
+   SAL_Int_T status = pthread_key_create(tls_key, NULL);
+   return (bool)(status == 0);
+}
+
 pid_t SAL_I_Get_Linux_Tid(void)
 {
    return (pid_t)syscall(SYS_gettid);
@@ -46,6 +54,104 @@ bool SAL_I_TLS_Set_Specific(SAL_TLS_Key_T tls_key, const void* value)
 void* SAL_I_TLS_Get_Specific(SAL_TLS_Key_T tls_key)
 {
    return pthread_getspecific(tls_key);
+}
+
+void SAL_I_Configure_RT_Sched_Policy(void)
+{
+   SAL_Int_T policy;
+   struct sched_param sched_p;
+
+   if (pthread_getschedparam(pthread_self(), &policy, &sched_p) == EOK)
+   {
+      if (policy != XSAL_SCHED_POLICY)
+      {
+         sched_p.sched_priority = SAL_DEFAULT_THREAD_PRIORITY;
+         if (pthread_setschedparam(pthread_self(), XSAL_SCHED_POLICY, &sched_p) != EOK)
+         {
+            printf("SAL_I_Configure_RT_Sched_Policy/pthread_setschedparam failed");
+         }
+      }
+   }
+   else
+   {
+      printf("SAL_I_Configure_RT_Sched_Policy/pthread_getschedparam failed");
+   }
+}
+
+bool SAL_I_Init_Thread_Module(void)
+{
+   size_t thread_idx;
+   static const char* Router_Thread_Name = "XSAL-RT";
+   SAL_Semaphore_Attr_T sem_attr;
+
+   if (!SAL_Create_Mutex(&SAL_I_Thread_Table_Mutex, NULL))
+   {
+      printf("SAL_I_Init_Threads_Module: SAL_Create_Mutex");
+      return false;
+   }
+
+   /* Add 1 to the Max_Number_Of_Threads, because there is one "system"
+    * thread - RouterThread.
+    */
+   SAL_I_Thread_Table = (SAL_I_Thread_Attr_T*)calloc(
+      SAL_I_Max_Number_Of_Threads+1u,
+      sizeof(SAL_I_Thread_Attr_T));
+   if (SAL_I_Thread_Table == NULL)
+   {
+      printf("Cannot allocate memory for thread attributes table");
+      return false;
+   }
+
+   SAL_Init_Semaphore_Attr(&sem_attr);
+   sem_attr.initial_value = 1;
+
+   for(
+      thread_idx = 0;
+      thread_idx <= SAL_I_Max_Number_Of_Threads;
+      thread_idx++)
+   {
+      SAL_I_Thread_Table[thread_idx].thread_id = SAL_UNKNOWN_THREAD_ID;
+      SAL_I_Thread_Table[thread_idx].is_ready = false;
+
+      if (!SAL_Create_Semaphore(&SAL_I_Thread_Table[thread_idx].thread_ready_sem, 0) ||
+         !SAL_Create_Semaphore(&SAL_I_Thread_Table[thread_idx].thread_destroyed_sem, &sem_attr))
+      {
+         printf("Cannot create semaphore for thread startup synchronization");
+         return false;
+      }
+
+      if (thread_idx != (size_t)SAL_ROUTER_THREAD_ID)
+      {
+         if (!SAL_I_Init_Queue_Structure(
+            &SAL_I_Thread_Table[thread_idx].message_queue))
+         {
+            printf("Cannot initialize queue structure");
+            return false;
+         }
+      }
+      SAL_I_Thread_Table[thread_idx].current_message = NULL;
+
+      SAL_I_Thread_Table[thread_idx].thread_timers = NULL;
+   }
+
+   SAL_I_Thread_Table[SAL_ROUTER_THREAD_ID].os_tid = SAL_I_Get_OS_TID();
+   SAL_I_Thread_Table[SAL_ROUTER_THREAD_ID].linux_tid = SAL_I_Get_Linux_Tid();
+
+   SAL_I_Thread_Table[SAL_ROUTER_THREAD_ID].thread_id = SAL_ROUTER_THREAD_ID;
+
+   (void)strncpy(
+      SAL_I_Thread_Table[SAL_ROUTER_THREAD_ID].thread_name,
+      Router_Thread_Name,
+      SAL_THREAD_NAME_MAX_LENGTH-1);
+
+   if (!SAL_I_TLS_Key_Create(&SAL_I_Thread_Id_Self) ||
+      !SAL_I_TLS_Set_Specific(SAL_I_Thread_Id_Self, SAL_I_Thread_Table))
+   {
+      printf("Init_Threads_Module: couldn't create or initialize TLS");
+      return false;
+   }
+
+   return true;
 }
 
 /** Returns pointer to calling thread data.

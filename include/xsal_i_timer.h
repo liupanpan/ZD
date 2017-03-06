@@ -42,6 +42,11 @@ extern SAL_I_Timer_T* SAL_I_Timers_Free_List;
  */
 extern SAL_Mutex_T SAL_I_Timers_Mutex;
 
+/** Function initializes XSAL Timer module.
+ *  It allocates memory, creates synchronization objects, ...
+ */
+bool SAL_I_Init_Timer_Module(void);
+
 /** Function terminates Router Thread Light.
  */
 void SAL_I_Stop_RT_Light(int32_t status);

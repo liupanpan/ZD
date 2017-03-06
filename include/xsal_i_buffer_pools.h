@@ -49,7 +49,7 @@ extern SAL_Mutex_T  SAL_I_Buffer_Pools_Mutex;
 #define Get_Buffer_Index(buffer_id)       ((buffer_id) >> 16)
 #define Get_Buffer_Id(pool_id, buffer_id) ((buffer_id << 16) | pool_id)
 
-
+bool SAL_I_Init_Buffer_Pools(void);
 
 
 #ifdef __cplusplus
