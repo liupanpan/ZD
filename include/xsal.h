@@ -506,7 +506,11 @@ bool SAL_Init(const SAL_Config_T* sal_config);
 
 int32_t SAL_Run(void);
 
+void SAL_Deinit(void);
 
+SAL_App_Id_T  SAL_Get_App_Id(void);
+
+size_t SAL_Get_Max_Number_Of_Threads(void);
 
 #ifdef __cplusplus
 }
