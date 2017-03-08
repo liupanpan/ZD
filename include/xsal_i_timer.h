@@ -47,6 +47,14 @@ extern SAL_Mutex_T SAL_I_Timers_Mutex;
  */
 bool SAL_I_Init_Timer_Module(void);
 
+/** Function starts module/thread for SAL timer.
+ */
+void SAL_I_Start_Timer_Module(void);
+
+/** Router Thread Light main function.
+ */
+int32_t SAL_I_RT_Light(void);
+
 /** Function terminates Router Thread Light.
  */
 void SAL_I_Stop_RT_Light(int32_t status);

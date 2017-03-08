@@ -8,9 +8,18 @@ extern "C"
 
 #include "xsal_data_types.h"
 
+/** Function called just before the SAL Message Loop.
+ */
+bool SAL_I_Before_Run(void);
+
+/** XSAL Message Loop function
+ */
+int32_t SAL_I_Run(void);
 
 
-
+/** Function called just after the SAL Message Loop.
+ */
+void SAL_I_After_Run(void);
 
 /** Function signalizes SAL Message Loop to 
  *  terminates and returns given status.

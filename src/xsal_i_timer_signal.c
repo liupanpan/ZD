@@ -24,6 +24,8 @@ static bool Is_Timer_Thread_Running;
  */
 static SAL_OS_TID_T Timer_Thread_Id;
 
+static pid_t Timer_Thread_Id_Linux;
+
 /** Handler to the OS timer
  */
 static timer_t OS_Timer_Id;
@@ -37,6 +39,17 @@ static SAL_I_Timer_T* Running_Timers_List;
 static SAL_Mutex_T Running_Timers_List_Mutex;
 
 static int32_t SAL_I_Exit_Value;
+
+static void Update_Expiration_Time(struct timespec* t1, uint32_t t2)
+{
+   t1->tv_sec += t2/1000;
+   t1->tv_nsec += (t2%1000)*1000000;
+   if (t1->tv_nsec >= 1000000000)
+   {
+      t1->tv_nsec -= 1000000000;
+      t1->tv_sec++;
+   }   
+}
 
 static SAL_I_Timer_T* Find_Timer_Position_In_The_List(SAL_I_Timer_T* timer)
 {
@@ -61,20 +74,6 @@ static SAL_I_Timer_T* Find_Timer_Position_In_The_List(SAL_I_Timer_T* timer)
    return position;
 }
 
-static void Restart_Timer(void)
-{
-   struct itimerspec itimer_spec;
-
-   itimer_spec.it_value = Running_Timers_List->expiration_time;
-   itimer_spec.it_interval.tv_sec  = 0;
-   itimer_spec.it_interval.tv_nsec = 0;
-
-   if (timer_settime(OS_Timer_Id, TIMER_ABSTIME, &itimer_spec, NULL) != 0)
-   {
-      printf("Timer_Thread/Restart_Timer: timer_settime failed. Error=%s", strerror(errno));
-   }
-}
-
 static bool Remove_Timer_From_Running_Timer_List(SAL_I_Timer_T* timer)
 {
    SAL_I_Timer_T* prev_head = Running_Timers_List;
@@ -83,8 +82,6 @@ static bool Remove_Timer_From_Running_Timer_List(SAL_I_Timer_T* timer)
    {
       if (Running_Timers_List->next_timer_by_time == Running_Timers_List)
       {
-         /** It was the only one timer on the list
-          */
          Running_Timers_List = NULL;
       }
       else
@@ -101,8 +98,6 @@ static bool Remove_Timer_From_Running_Timer_List(SAL_I_Timer_T* timer)
       timer->prev_timer_by_time->next_timer_by_time = timer->next_timer_by_time;
    }
 
-   /** Unattach timer form list
-    */
    timer->next_timer_by_time = NULL;
 
    return prev_head != Running_Timers_List;
@@ -112,9 +107,6 @@ static bool Add_Timer_To_Running_Timers_List(SAL_I_Timer_T* timer)
 {
    bool new_head = false;
 
-   /** If the timer is on the running timer list then remove it from the list
-    *  and it next insert on the new position.
-    */
    if (timer->next_timer_by_time != NULL)
    {
       (void)Remove_Timer_From_Running_Timer_List(timer);
@@ -153,15 +145,101 @@ static bool Add_Timer_To_Running_Timers_List(SAL_I_Timer_T* timer)
    return new_head;
 }
 
-static void Update_Expiration_Time(struct timespec* t1, uint32_t t2)
+static void Restart_Timer(void)
 {
-   t1->tv_sec += t2/1000;
-   t1->tv_nsec += (t2%1000)*1000000;
-   if (t1->tv_nsec >= 1000000000)
+   struct itimerspec itimer_spec;
+
+   itimer_spec.it_value = Running_Timers_List->expiration_time;
+   itimer_spec.it_interval.tv_sec  = 0;
+   itimer_spec.it_interval.tv_nsec = 0;
+
+   if (timer_settime(OS_Timer_Id, TIMER_ABSTIME, &itimer_spec, NULL) != 0)
    {
-      t1->tv_nsec -= 1000000000;
-      t1->tv_sec++;
-   }   
+      printf("Timer_Thread/Restart_Timer: timer_settime failed. Error=%s", strerror(errno));
+   }
+}
+
+static void Remove_First_Timer_From_Running_Timer_List(void)
+{
+   SAL_I_Timer_T* new_head = Running_Timers_List->next_timer_by_time;
+
+   Running_Timers_List->next_timer_by_time = NULL;
+
+   if (new_head != Running_Timers_List)
+   {
+      new_head->prev_timer_by_time = Running_Timers_List->prev_timer_by_time;
+      Running_Timers_List->prev_timer_by_time->next_timer_by_time = new_head;
+   }
+   else
+   {
+      new_head = NULL;
+   }
+   Running_Timers_List = new_head;
+}
+
+static void* Timer_Thread(void *arg)
+{
+   sigset_t sigset;
+
+   arg = arg; /* get rid of unused variable warning */
+
+   if (!SAL_I_TLS_Set_Specific(SAL_I_Thread_Id_Self, &SAL_I_Thread_Table[SAL_ROUTER_THREAD_ID]))
+   {
+      SAL_PRE_FAILED();
+   }
+
+   (void)sigemptyset(&sigset);
+   (void)sigaddset(&sigset, SAL_I_Timer_Signal_Id);
+   sigprocmask(SIG_BLOCK, &sigset, NULL);
+   Timer_Thread_Id_Linux = SAL_I_Get_Linux_Tid();
+
+   Is_Timer_Thread_Running = true;
+   (void)SAL_Signal_Semaphore(&Timer_Sem);
+
+   while(Is_Timer_Thread_Running)
+   {     
+      int sig;
+      int status = sigwait(&sigset, &sig);
+      if ((status == 0) && (sig == SAL_I_Timer_Signal_Id))
+      {
+         if (SAL_Lock_Mutex(&Running_Timers_List_Mutex))
+         {
+            struct timespec now;
+            SAL_I_Timer_T* timer = Running_Timers_List;
+
+            (void)clock_gettime(SAL_I_Timer_Signal_Clock_Id, &now);
+            while(timer != NULL)
+            {
+               if ((timer->expiration_time.tv_sec < now.tv_sec) ||
+                   ((timer->expiration_time.tv_sec == now.tv_sec) && (timer->expiration_time.tv_nsec <= now.tv_nsec)))
+               {
+                  Remove_First_Timer_From_Running_Timer_List();
+                  SAL_I_Post_Timer_Event(timer->event_id, timer->thread_id, timer->use_param, timer->param);
+
+                  if (timer->period > 0)
+                  {
+                     Update_Expiration_Time(&timer->expiration_time, timer->period);
+                     (void)Add_Timer_To_Running_Timers_List(timer);
+                  }
+                  timer = Running_Timers_List;
+               }
+               else
+               {
+                  timer = NULL;
+               }
+            }
+            if (Running_Timers_List != NULL)
+            {
+               Restart_Timer();
+            }
+            (void)SAL_Unlock_Mutex(&Running_Timers_List_Mutex);
+         }
+      }
+   }
+
+   (void)SAL_Signal_Semaphore(&Timer_Sem);
+
+   return NULL;
 }
 
 void SAL_I_Stop_RT_Light(int32_t status)
@@ -258,6 +336,33 @@ bool SAL_I_Create_Timer(SAL_I_Timer_T* timer)
 {
    timer = timer; /* remove unused variable warning */
    return true;
+}
+
+void SAL_I_Start_Timer_Module(void)
+{
+   if (SAL_I_Timers != NULL)
+   {
+      size_t tm_id;
+
+      SAL_I_Timers_Free_List = &SAL_I_Timers[0];
+      for(tm_id = 0; tm_id < SAL_I_Max_Number_Of_Timers-1; tm_id++)
+      {
+         SAL_I_Timers[tm_id].event_id = -1;
+         SAL_I_Timers[tm_id].next_thread_timer = &SAL_I_Timers[tm_id + 1];
+         SAL_I_Timers[tm_id].next_timer_by_time = NULL;
+      }
+      SAL_I_Timers[SAL_I_Max_Number_Of_Timers-1].event_id = -1;
+      SAL_I_Timers[SAL_I_Max_Number_Of_Timers-1].next_thread_timer = NULL;
+      SAL_I_Timers[SAL_I_Max_Number_Of_Timers-1].next_timer_by_time = NULL;
+   }
+}
+
+int32_t SAL_I_RT_Light(void)
+{
+   Timer_Thread_Id = pthread_self();
+   (void)SAL_Signal_Ready();
+   Timer_Thread(NULL);
+   return SAL_I_Exit_Value;
 }
 
 void SAL_I_Start_Timer(SAL_I_Timer_T* timer,uint32_t interval_msec, bool is_periodic,bool use_param, uintptr_t param)
