@@ -357,6 +357,10 @@ void SAL_I_Start_Timer_Module(void)
    }
 }
 
+void SAL_I_Stop_Timer_Module(void)
+{ 
+}
+
 int32_t SAL_I_RT_Light(void)
 {
    Timer_Thread_Id = pthread_self();

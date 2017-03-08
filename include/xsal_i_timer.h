@@ -51,6 +51,10 @@ bool SAL_I_Init_Timer_Module(void);
  */
 void SAL_I_Start_Timer_Module(void);
 
+/** Function stops SAL Thread module/thread.
+ */
+void SAL_I_Stop_Timer_Module(void);
+
 /** Router Thread Light main function.
  */
 int32_t SAL_I_RT_Light(void);
