@@ -57,3 +57,22 @@ bool SAL_I_Init_Buffer_Pools(void)
    return status;
 }
 
+void SAL_I_Deinit_Buffer_Pools(void)
+{
+   if (SAL_I_Max_Number_Of_Buffer_Pools > 0u)
+   {
+      size_t i;
+      
+      SAL_PRE(SAL_I_Buffer_Pools_Tab != NULL);
+
+      for(i=0; i < SAL_I_Max_Number_Of_Buffer_Pools; i++)
+      {
+         (void)SAL_Destroy_Mutex(&SAL_I_Buffer_Pools_Tab[i].pool_mutex);
+         free(SAL_I_Buffer_Pools_Tab[i].buffer);
+      }
+      (void)SAL_Destroy_Mutex(&SAL_I_Buffer_Pools_Mutex);
+      free(SAL_I_Buffer_Pools_Tab);
+      SAL_I_Buffer_Pools_Tab = NULL;
+   }
+}
+

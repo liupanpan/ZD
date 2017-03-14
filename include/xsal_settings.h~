@@ -7,7 +7,7 @@ extern "C"
 #endif /* __cplusplus */
 
 #define SAL_MAX_EVENTS 10
-#define SAL_MAX_APPS 10
+
 /***********************************
  *
  *       Timer configuration

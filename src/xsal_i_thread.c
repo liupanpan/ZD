@@ -51,6 +51,15 @@ bool SAL_I_TLS_Set_Specific(SAL_TLS_Key_T tls_key, const void* value)
    return status;
 }
 
+
+bool SAL_I_TLS_Key_Delete(SAL_TLS_Key_T tls_key)
+{
+   SAL_Int_T status = pthread_key_delete(tls_key);
+
+   return (bool)(status == 0);
+}
+
+
 void* SAL_I_TLS_Get_Specific(SAL_TLS_Key_T tls_key)
 {
    return pthread_getspecific(tls_key);
@@ -153,6 +162,31 @@ bool SAL_I_Init_Thread_Module(void)
 
    return true;
 }
+
+void SAL_I_Deinit_Thread_Module(void)
+{
+   size_t thread_idx;
+
+   (void)SAL_I_TLS_Key_Delete(SAL_I_Thread_Id_Self);
+
+   for(
+      thread_idx = 0;
+      thread_idx <= SAL_I_Max_Number_Of_Threads;
+      thread_idx++)
+   {
+      (void)SAL_Destroy_Semaphore(&SAL_I_Thread_Table[thread_idx].thread_ready_sem);
+      (void)SAL_Destroy_Semaphore(&SAL_I_Thread_Table[thread_idx].thread_destroyed_sem);
+
+      if (thread_idx != (size_t)SAL_ROUTER_THREAD_ID)
+      {
+         SAL_I_Deinit_Queue_Structure(&SAL_I_Thread_Table[thread_idx].message_queue);
+      }
+   }
+
+   free(SAL_I_Thread_Table);
+   (void)SAL_Destroy_Mutex(&SAL_I_Thread_Table_Mutex);
+}
+
 
 /** Returns pointer to calling thread data.
  */

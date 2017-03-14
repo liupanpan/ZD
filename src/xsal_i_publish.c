@@ -8,6 +8,10 @@
 #include <stdlib.h>
 #include <sys/timeb.h>
 
+void SAL_I_Deinit_Publish_Module(void)
+{
+}
+
 /** Function is called when given thread has finished its job 
  *  or has been terminated.
  *  It unsubscribes from LRT events subscribed by given thread.

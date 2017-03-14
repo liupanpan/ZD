@@ -51,6 +51,7 @@ extern SAL_Mutex_T  SAL_I_Buffer_Pools_Mutex;
 
 bool SAL_I_Init_Buffer_Pools(void);
 
+void SAL_I_Deinit_Buffer_Pools(void);
 
 #ifdef __cplusplus
 }

@@ -332,6 +332,19 @@ bool SAL_I_Init_Timer_Module(void)
    return status;
 }
 
+void SAL_I_Deinit_Timer_Module(void)
+{
+   if (SAL_I_Timers != NULL)
+   {
+      free(SAL_I_Timers);
+      SAL_I_Timers = NULL;
+      (void)SAL_Destroy_Semaphore(&Timer_Sem);
+      (void)SAL_Destroy_Mutex(&Running_Timers_List_Mutex);
+      (void)SAL_Destroy_Mutex(&SAL_I_Timers_Mutex);
+      (void)timer_delete(OS_Timer_Id);
+   }
+}
+
 bool SAL_I_Create_Timer(SAL_I_Timer_T* timer)
 {
    timer = timer; /* remove unused variable warning */

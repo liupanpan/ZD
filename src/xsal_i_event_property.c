@@ -39,3 +39,12 @@ bool SAL_I_Init_Event_Property_Module(void)
 
    return status;
 }
+
+void SAL_I_Deinit_Event_Property_Module(void)
+{
+   SAL_PRE(SAL_I_Event_Property != NULL);
+
+   free(SAL_I_Event_Property);
+   (void)SAL_Destroy_Mutex(&SAL_I_Event_Property_Mutex);
+}
+

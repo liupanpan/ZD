@@ -47,6 +47,11 @@ extern SAL_Mutex_T SAL_I_Timers_Mutex;
  */
 bool SAL_I_Init_Timer_Module(void);
 
+/** Function releases resources allocated by 
+ *  SAL_I_Init_Timer_Module() function.
+ */
+void SAL_I_Deinit_Timer_Module(void);
+
 /** Function starts module/thread for SAL timer.
  */
 void SAL_I_Start_Timer_Module(void);

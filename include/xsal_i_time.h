@@ -13,7 +13,10 @@ extern "C"
  */
 void SAL_I_Init_Time_Module(void);
 
-
+/** Function releases resources allocated by 
+ *  SAL_I_Init_Time_Module() function.
+ */
+void SAL_I_Deinit_Time_Module(void);
 
 
 

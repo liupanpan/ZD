@@ -40,9 +40,9 @@ extern SAL_Mutex_T SAL_I_Event_Property_Mutex;
  */
 #define SAL_I_Is_Subscribed(tid, ev_id) ((SAL_I_Event_Property[(tid)-1][(ev_id)] & SAL_I_Subscribe_Bit_Mask) != 0)
 
-/** Initialize Event Property module
- */
 bool SAL_I_Init_Event_Property_Module(void);
+
+void SAL_I_Deinit_Event_Property_Module(void);
 
 #ifdef __cplusplus
 }

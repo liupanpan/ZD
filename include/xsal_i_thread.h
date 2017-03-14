@@ -92,6 +92,10 @@ extern SAL_I_Thread_Attr_T* SAL_I_Thread_Table;
  */
 extern SAL_Mutex_T  SAL_I_Thread_Table_Mutex;
 
+/** Function deletes Thread Local Storage (TLS) key.
+ */
+bool SAL_I_TLS_Key_Delete(SAL_TLS_Key_T tls_key);
+
 /** Function assigns value to key in the Thread Local Storage.
  */
 bool SAL_I_TLS_Set_Specific(SAL_TLS_Key_T tls_key, const void* value);
@@ -124,6 +128,9 @@ pid_t SAL_I_Get_Linux_Tid(void);
  */
 bool SAL_I_Init_Thread_Module(void);
 
+/** Function de-initializes thread module.
+ */
+void SAL_I_Deinit_Thread_Module(void);
 
 
 
