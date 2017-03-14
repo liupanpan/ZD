@@ -16,7 +16,7 @@ bool SAL_I_Init_Event_Property_Module(void)
    bool status = false;
    if (SAL_Create_Mutex(&SAL_I_Event_Property_Mutex, NULL))
    {
-      SAL_I_Event_Property = calloc(SAL_MAX_EVENTS, SAL_I_Max_Number_Of_Threads);
+      SAL_I_Event_Property = (uint8_t (*)[SAL_MAX_EVENTS])calloc(SAL_MAX_EVENTS, SAL_I_Max_Number_Of_Threads);
       if (SAL_I_Event_Property != NULL)
       {
          status = true;
