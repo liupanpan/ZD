@@ -187,6 +187,10 @@ void SAL_I_Deinit_Thread_Module(void)
    (void)SAL_Destroy_Mutex(&SAL_I_Thread_Table_Mutex);
 }
 
+void SAL_I_Exit_Thread(void)
+{
+	pthread_exit(NULL);
+}
 
 /** Returns pointer to calling thread data.
  */

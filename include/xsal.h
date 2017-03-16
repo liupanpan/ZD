@@ -512,6 +512,8 @@ SAL_App_Id_T  SAL_Get_App_Id(void);
 
 size_t SAL_Get_Max_Number_Of_Threads(void);
 
+void SAL_Exit(int32_t status);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

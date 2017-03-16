@@ -112,6 +112,10 @@ bool SAL_I_Set_Thread_Priority(SAL_Thread_Id_T thread_id, SAL_Priority_T priorit
  */
 void SAL_I_Free_Thread_Resources(SAL_Thread_Id_T thread_id);
 
+/** Function terminates calling thread
+ */
+void SAL_I_Exit_Thread(void);
+
 /** Returns SAL Thread Id.
  */
 SAL_Thread_Id_T  SAL_I_Get_Thread_Id(void);
