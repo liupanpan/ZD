@@ -9,7 +9,7 @@ extern "C"
 #include "xsal_settings.h"
 #include "xsal_data_types.h"
 #include "stdio.h"
-
+#include <stdbool.h>
 /* -------------------------------------------------------------------------
  *
  *                              SAL Mutex

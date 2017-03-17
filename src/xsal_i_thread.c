@@ -75,9 +75,11 @@ void SAL_I_Configure_RT_Sched_Policy(void)
       if (policy != XSAL_SCHED_POLICY)
       {
          sched_p.sched_priority = SAL_DEFAULT_THREAD_PRIORITY;
-         if (pthread_setschedparam(pthread_self(), XSAL_SCHED_POLICY, &sched_p) != EOK)
+    	int ret = pthread_setschedparam(pthread_self(), XSAL_SCHED_POLICY, &sched_p);
+		if(ret < EOK) 
          {
-            printf("SAL_I_Configure_RT_Sched_Policy/pthread_setschedparam failed");
+			printf("can not set schedule parameters: %s\n", strerror(ret));
+            printf("SAL_I_Configure_RT_Sched_Policy/pthread_setschedparam failed\n");
          }
       }
    }

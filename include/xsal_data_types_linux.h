@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <limits.h>
 #include <signal.h>
-
+#include <stdbool.h>
 /**
  *  SAL Mutex type.
  */
