@@ -159,6 +159,22 @@ bool SAL_Destroy_Semaphore(SAL_Semaphore_T* sem);
 bool SAL_Wait_Semaphore(SAL_Semaphore_T* sem);
 
 /**
+ *  Attempts to wait for a semaphore with a timeout.
+ *
+ *  If semaphore count is 0, the calling thread blocks until 
+ *  the semaphore is signaled or specified timeout expires.
+ *
+ *  @param [in] sem           pointer to the semaphore to wait for
+ *  @param [in] timeout_msec  timeout value (milliseconds)
+ *
+ *  @return  true on success, false on timeout or error
+ * 
+ *  @see SAL_Create_Semaphore(), SAL_Wait_Semaphore(), 
+ *       SAL_Try_Wait_Semaphore(), SAL_Signal_Semaphore()
+ */
+bool SAL_Wait_Semaphore_Timeout(SAL_Semaphore_T* sem, uint32_t timeout_msec);
+
+/**
  *  Attempts to wait for a semaphore.
  *
  *  Function does not block the calling thread if semaphore
@@ -494,6 +510,36 @@ void SAL_Signal_Ready(void);
  *  @see SAL_Signal_Ready(), SAL_Wait_Destroyed()
  */
 void SAL_Wait_Ready(const SAL_Thread_Id_T thread_id_list[], size_t number_of_items);
+
+/**
+ *  Suspends its caller until all threads in thread_id_list
+ *  have called SAL_Signal_Ready() or the specified timeout expires.
+ *
+ *  @param [in] thread_id_list   list of IDs of threads to wait for
+ *  @param [in] number_of_items  number of thread IDs on the list
+ *  @param [in] timeout_msec     timeout (milliseconds)
+ *
+ *  @see SAL_Signal_Ready(), SAL_Wait_Destroyed()
+ */
+bool SAL_Wait_Ready_Timeout(
+   const SAL_Thread_Id_T thread_id_list[], 
+   size_t number_of_items, 
+   uint32_t timeout_msec);
+
+/**
+ *  Suspends its caller until all threads in thread_id_list 
+ *  have been terminated or the specified timeout expires.
+ *
+ *  @param [in] thread_id_list   list of IDs of threads to wait for
+ *  @param [in] number_of_items  number of thread IDs on the list
+ *  @param [in] timeout_msec     timeout (milliseconds)
+ *
+ *  @see SAL_Signal_Ready(), SAL_Wait_Ready()
+ */
+bool SAL_Wait_Destroyed_Timeout(
+   const SAL_Thread_Id_T thread_id_list[],
+   size_t number_of_items,
+   uint32_t timeout_msec);
 
 /* -------------------------------------------------------------------------
  *
