@@ -132,6 +132,9 @@ void SAL_I_Release_Message(SAL_Message_T* message);
 
 void SAL_I_Remove_Node_From_Queue(SAL_Message_Queue_Node_T* node);
 
+SAL_Message_T* SAL_I_Pend_Message_Timeout(
+   SAL_Message_Queue_T* queue, 
+   uint32_t timeout_ms);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

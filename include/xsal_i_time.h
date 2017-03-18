@@ -25,6 +25,12 @@ void SAL_I_Deinit_Time_Module(void);
  */
 void SAL_I_Get_Time(SAL_I_Time_Spec_T* time_spec);
 
+/** Function returns delta (in milliseconds) betwen two times.
+ */
+uint32_t SAL_I_Time_Diff(
+   const SAL_I_Time_Spec_T* time1_spec,
+   const SAL_I_Time_Spec_T* time2_spec);
+
 /** Function increase time_spec by time_offset (in milliseconds).
  */
 void SAL_I_Time_Add_Offset(

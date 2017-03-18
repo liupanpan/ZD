@@ -10,6 +10,16 @@ void SAL_I_Get_Time(SAL_I_Time_Spec_T* time_spec)
    (void)clock_gettime(CLOCK_REALTIME, time_spec);
 }
 
+uint32_t SAL_I_Time_Diff(
+   const SAL_I_Time_Spec_T* time1_spec,
+   const SAL_I_Time_Spec_T* time2_spec)
+{
+   uint32_t sec = (uint32_t)(time2_spec->tv_sec - time1_spec->tv_sec)*1000U;
+   int32_t msec = (int32_t)(time2_spec->tv_nsec - time1_spec->tv_nsec)/1000000;
+
+   return (msec >= 0) ? (sec + (uint32_t)msec) : (sec-(uint32_t)(-msec));
+}
+
 void SAL_I_Time_Add_Offset(
    SAL_I_Time_Spec_T* time_spec,
    uint32_t time_offset)

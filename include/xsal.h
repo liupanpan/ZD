@@ -332,6 +332,20 @@ bool SAL_Stat_Queue(SAL_Thread_Id_T thread_id, SAL_Stat_Queue_T* queue_stat);
  */ 
 bool SAL_Send(SAL_App_Id_T app_id, SAL_Thread_Id_T thread_id, SAL_Event_Id_T event_id, const void* data, size_t data_size);
 
+/**
+ *  Retrieves a message from the thread's queue with a timeout.
+ *
+ *  Function blocks the calling thread until a message becomes available 
+ *  or the timeout expires.
+ *
+ *  @param timeout_ms  timeout value
+ *
+ *  @return  pointer to the received message or NULL in case of timeout
+ *
+ *  @see SAL_Receive_From()
+ */
+const SAL_Message_T* SAL_Receive_Timeout(uint32_t timeout_ms);
+
 /* -------------------------------------------------------------------------
  *
  *                            Event subscribtion
