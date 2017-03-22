@@ -249,6 +249,66 @@ void SAL_Free_Buffer(void* buffer);
 
 /* -------------------------------------------------------------------------
  *
+ *                              Utility functions
+ *
+ * -------------------------------------------------------------------------*/
+/** 
+ *  OS independent memory allocator 
+ *
+ *  @param [in] size number of bytes to allocate
+ *
+ *  @return pointer to allocated memory, NULL if unable to allocate
+ *
+ *  @see SAL_Free()
+ */
+void* SAL_Alloc(size_t size);
+
+/** 
+ *  OS independent memory free 
+ *
+ *  @param [in] ptr pointer to block previously allocated by SAL_Alloc()
+ *
+ *  @see SAL_Alloc()
+ */
+void SAL_Free(void* ptr);
+
+/** 
+ *  Function returns program execution time (since an implementation-defined
+ *  point of time) in miliseconds.
+ *
+ *  @return  number of milliseconds
+ *
+ *  @see SAL_Elapsed_Time(), SAL_Delta_Time()
+ */
+SAL_Clock_T SAL_Clock(void);
+
+
+/** 
+ *  Function returns the number of milliseconds elapsed since/until timestamp.
+ *  The number returned is negative if the timestamp lies in the future.
+ *
+ *  @param [in] timestamp timestamp to calculate elapsed time
+ *
+ *  @return  number of milliseconds since/until timestamp
+ *
+ *  @see SAL_Clock(), SAL_Delta_Time()
+ */
+SAL_Int_T SAL_Elapsed_Time(SAL_Clock_T timestamp);
+
+/** 
+ * Function returns the delta time (in milliseconds) between two timestamps.
+ *
+ *  @param [in] start_time first timestamp to calculate delta
+ *  @param [in] end_time second timestamp to calculate delta
+ *
+ *  @return  delat (in millicecondsd) between start_time and end_time
+ *
+ *  @see SAL_Clock(), SAL_Delta_Time()
+ */
+SAL_Int_T SAL_Delta_Time(SAL_Clock_T start_time, SAL_Clock_T end_time);
+
+/* -------------------------------------------------------------------------
+ *
  *                              Queue management
  *
  * -------------------------------------------------------------------------*/

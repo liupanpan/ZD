@@ -12,6 +12,12 @@ extern "C"
 
 typedef struct timespec SAL_I_Time_Spec_T;
 
+/* ------------------------------
+ *  Exported Object Declarations
+ * ------------------------------ */
+
+extern SAL_Clock_T SAL_I_Clock_Start_Time;
+
 /** Function initializes XSAL Time module.
  */
 void SAL_I_Init_Time_Module(void);
@@ -24,6 +30,14 @@ void SAL_I_Deinit_Time_Module(void);
 /** Function saves current time (seconds and milliseconds)
  */
 void SAL_I_Get_Time(SAL_I_Time_Spec_T* time_spec);
+
+/** Function returns number of seconds from time_spec variable
+ */
+uint32_t SAL_I_Time_Get_Seconds(const SAL_I_Time_Spec_T* time_spec);
+
+/** Function returns number of milliseconds from time_spec variable
+ */
+SAL_Int_T SAL_I_Time_Get_Milli_Seconds(const SAL_I_Time_Spec_T* time_spec);
 
 /** Function returns delta (in milliseconds) betwen two times.
  */
