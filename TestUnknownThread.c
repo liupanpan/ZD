@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "xsal.h"
-#include "debugtrace.h"
+#include <stdlib.h>
+#include "include/xsal.h"
 
 #define APP_ID 2
 
@@ -82,7 +82,6 @@ void Unknown_Thread_Fun(void* param)
    /* check if thread id is correct */
    if (Thread_Id[i] != SAL_Get_Thread_Id())
    {
-                                                         i, SAL_Get_Thread_Id());
       for (k = 0; k < 5; k++)
       {
          printf("Thread_Id[%d]: %d\n", k, Thread_Id[k]);
@@ -174,14 +173,13 @@ void Main_Thread_Fun(void* param)
       {
          for (k = 0; k < 5; k++)
          {
-            Tr_Inf(DT_SAL, "Thread_Id[%d]: %d\n", k, Thread_Id[k]);         
+            printf("Thread_Id[%d]: %d\n", k, Thread_Id[k]);         
          }
          SAL_Exit(1);
       }
 
       if (Thread_Id[i] != j)
       {
-                                                                             j, i, Thread_Id[i]);
          for (k = 0; k < 5; k++)
          {
             printf("Thread_Id[%d]: %d\n", k, Thread_Id[k]);         

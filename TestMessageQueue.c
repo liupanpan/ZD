@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "xsal.h"
-#include "debugtrace.h"
+#include "include/xsal.h"
 
 #define APP_ID 2
 #define MAX_NUMB_OF_THREADS 2
@@ -152,7 +151,6 @@ void Receive_Fun(void* param)
 
    if (stat.peak_message_count != Max_Message_Count)
    {
-                                                 stat.peak_message_count);
       SAL_Exit(1);
    }
 
@@ -335,8 +333,6 @@ void Tear_Down()
 SAL_Int_T main(SAL_Int_T argc, char** argv)
 {
    SAL_Int_T ret = 0;
-
-   Tr_Init("Queue_Test", 0, 0, 0, argc, argv);
 
    if (Set_Up())
    {

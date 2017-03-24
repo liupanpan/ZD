@@ -406,6 +406,21 @@ bool SAL_Send(SAL_App_Id_T app_id, SAL_Thread_Id_T thread_id, SAL_Event_Id_T eve
  */
 const SAL_Message_T* SAL_Receive_Timeout(uint32_t timeout_ms);
 
+/**
+ *  Retrieves a selected message from the thread's queue with a timeout.
+ *
+ *  Function blocks the calling thread until a message from the supplied list 
+ *  becomes available in the message queue or the timeout expires.
+ *
+ *  @return  pointer to the received message or NULL in case of timeout
+ *
+ *  @see SAL_Receive_From()
+ */
+const SAL_Message_T* SAL_Receive_Only_Timeout(
+   const SAL_Event_Id_T event_list[], 
+   size_t number_of_events, 
+   uint32_t timeout_ms);
+
 /* -------------------------------------------------------------------------
  *
  *                            Event subscribtion

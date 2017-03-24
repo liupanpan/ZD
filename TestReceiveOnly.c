@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <sys/timeb.h>
 
-#include "xsal.h"
-#include "debugtrace.h"
+#include "include/xsal.h"
 
 #define APP_ID 2
 
@@ -184,7 +183,6 @@ void Receive_Only_Thread_2(void* param)
    /* check message_count */
    if (stat.message_count != Message_Count)
    {
-                                                      stat.message_count, Message_Count);
       SAL_Exit(1);
    }
 
@@ -264,7 +262,6 @@ void Receive_Only_Thread_3(void* param)
 
    if (msg != NULL)
    {
-                                                               delta_time, msg->event_id);
       SAL_Exit(1);
    }
 
@@ -376,13 +373,10 @@ void Receive_Only_Thread_5(void* param)
          {
             data_1 = (Sample_Msg_T_1*)msg->data;
                 
-                                  SAL_Get_Thread_Id(), data_1->field_1, data_1->field_2);
          }
          else /* msg->data_size == sizeof(Sample_Msg_T_2) */
          {
             data_2 = (Sample_Msg_T_2*)msg->data;
-
-                  SAL_Get_Thread_Id(), data_2->field_1, data_2->field_2, data_2->field_3);
          }
       }         
 
@@ -396,7 +390,6 @@ void Receive_Only_Thread_5(void* param)
    /* check message_count */
    if (stat.message_count > (Peak_Message_Count - param_list->rec_event_list_number))
    {
-                                                 stat.message_count, Peak_Message_Count);
       SAL_Exit(1);
    }
 
@@ -742,8 +735,6 @@ SAL_Int_T main (SAL_Int_T argc, char** argv)
    SAL_Int_T ret = 0;
    Param_List_T param_list;
 
-   Tr_Init("TestRecOnly_c", 0, 0, 0, argc, argv);
-
    if (Set_Up())
    {
       return 1;
@@ -873,7 +864,7 @@ SAL_Int_T main (SAL_Int_T argc, char** argv)
 
    Tear_Down();
 
-   Tr_Inf(DT_SAL, "Test %s", ((ret)?("FAILED"):("PASSED")));
+   printf("Test %s\n", ((ret)?("FAILED"):("PASSED")));
 
    return ret;
 
